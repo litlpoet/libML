@@ -1,0 +1,2 @@
+add_gmock_test(MLGaussianTest test_mlgaussian.cpp)
+target_link_libraries(MLGaussianTest MLCore)
