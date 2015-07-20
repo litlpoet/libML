@@ -5,13 +5,14 @@
 
 #include <utility>
 #include <vector>
+#include <map>
 
 #include "MLCore/mathtypes.h"
 
 namespace ML {
 
 typedef std::pair<int, VecN> T_Sample;
-typedef std::vector<T_Sample> TimeSeries;
+typedef std::map<int, VecN> TimeSeriesMap;
 
 }  // namespace ML
 

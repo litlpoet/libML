@@ -10,8 +10,7 @@ namespace ML {
 
 class GaussianInterpolation {
  public:
-  GaussianInterpolation(const int& D, const float& T,
-                        const TimeSeries& time_series_data);
+  GaussianInterpolation(const int& D, const TimeSeriesMap& time_series_data);
 
   ~GaussianInterpolation();
 

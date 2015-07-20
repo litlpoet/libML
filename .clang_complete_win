@@ -19,5 +19,7 @@
 -Ic:/Local/msys64/mingw64/lib/clang/3.6.1/include/
 -Ic:/Local/include/
 -Ic:/Local/include/eigen3/
+-Is:/VersionControl/Libraries/gmock/include/
+-Is:/VersionControl/Libraries/gmock/gtest/include/
 -Is:/VersionControl/Research/libML/
 

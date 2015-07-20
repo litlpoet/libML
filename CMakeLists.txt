@@ -61,6 +61,8 @@ add_test(
   LibMLMain
   )
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 set(CONFIGURED_ONCE TRUE
   CACHE INTERNAL
   "A flag showing that CMake has configured at least once")
