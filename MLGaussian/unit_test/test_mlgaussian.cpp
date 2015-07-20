@@ -8,11 +8,9 @@ class TestMLGaussian : public ::testing::Test {
   void SetUp() {
     _frames = 10;
 
-    ML::VecN vec_3d(3);
-
-    _t_data.insert(ML::T_Sample(0, (vec_3d << 0.0f, 0.0f, 0.0f).finished()));
-    _t_data.insert(ML::T_Sample(5, (vec_3d << 1.0f, 2.0f, 0.5f).finished()));
-    _t_data.insert(ML::T_Sample(9, (vec_3d << 0.0f, 0.0f, 0.0f).finished()));
+    _t_data.insert(ML::MakeTimeSample(0, 3, 0.0f, 0.0f, 0.0f));
+    _t_data.insert(ML::MakeTimeSample(5, 3, 1.0f, 2.0f, 0.5f));
+    _t_data.insert(ML::MakeTimeSample(9, 3, 0.0f, 0.0f, 0.0f));
 
     _g_interp = new ML::GaussianInterpolation(_frames, _t_data);
   }
