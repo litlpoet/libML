@@ -1,4 +1,4 @@
-set(GMOCK_DIR "../../Libraries/gmock-1.6.0"  # starting from the project root
+set(GMOCK_DIR "../../Libraries/gmock"  # starting from the project root
   CACHE PATH
   "The path to the Google mock test framework")
 
@@ -16,7 +16,8 @@ set_property(TARGET gtest gmock gmock_main APPEND_STRING PROPERTY COMPILE_FLAGS 
 include_directories(
   SYSTEM
   ${GMOCK_DIR}/gtest/include
-  ${GMOCK_DIR}/include)
+  ${GMOCK_DIR}/include
+  )
 
 # add_gmock_test(<target> <sources>...)
 #  Adds a Google mock based test executable, <target>, build from <sources>

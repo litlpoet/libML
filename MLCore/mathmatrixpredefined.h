@@ -1,7 +1,8 @@
-#ifndef _MLMATHMATRIXPREDEFINED_H_
-#define _MLMATHMATRIXPREDEFINED_H_
+// Copyright (c) 2015 Byungkuk Choi
 
-#include <vector>
+#ifndef MLCORE_MATHMATRIXPREDEFINED_H_
+#define MLCORE_MATHMATRIXPREDEFINED_H_
+
 #include "MLCore/mathsparsetypes.h"
 
 namespace ML {
@@ -10,4 +11,4 @@ bool MakeFiniteDiffernceMat(const int& dim, SpMat* L);
 
 }  // namespace ML
 
-#endif  // _MLMATHMATRIXPREDEFINED_H_
+#endif  // MLCORE_MATHMATRIXPREDEFINED_H_

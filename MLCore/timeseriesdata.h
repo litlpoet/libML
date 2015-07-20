@@ -1,7 +1,7 @@
 // Copyright 2015 Byungkuk Choi.
 
-#ifndef MLTIMESERIESDATA_HPP_
-#define MLTIMESERIESDATA_HPP_
+#ifndef MLCORE_TIMESERIESDATA_H_
+#define MLCORE_TIMESERIESDATA_H_
 
 #include <utility>
 #include <vector>
@@ -15,4 +15,4 @@ typedef std::vector<T_Sample> TimeSeries;
 
 }  // namespace ML
 
-#endif  // MLTIMESERIESDATA_HPP_
+#endif  // MLCORE_TIMESERIESDATA_H_

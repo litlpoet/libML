@@ -26,9 +26,15 @@ if (NOT CONFIGURED_ONCE)
     FORCE)
 endif()
 
+if (WIN32)
+  set(EIGEN3_DIR "c:/Local/include/eigen3")
+else()
+  set(EIGEN3_DIR "/usr/local/include/eigen3")
+endif()
+
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
-  "c:/Local/include/eigen3"
+  ${EIGEN3_DIR}
   )
 
 add_subdirectory(MLCore)

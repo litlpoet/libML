@@ -1,2 +1,4 @@
 add_gmock_test(MLGaussianTest test_mlgaussian.cpp)
-target_link_libraries(MLGaussianTest MLCore)
+target_link_libraries(MLGaussianTest MLCore MLGaussian)
+target_compile_features(MLGaussianTest PRIVATE cxx_range_for)
+

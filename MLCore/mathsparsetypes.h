@@ -1,7 +1,7 @@
 // Copyright 2015 Byungkuk Choi.
 
-#ifndef MLMATHSPARSETYPES_HPP_
-#define MLMATHSPARSETYPES_HPP_
+#ifndef MLCORE_MATHSPARSETYPES_H_
+#define MLCORE_MATHSPARSETYPES_H_
 
 #include <Eigen/Sparse>
 #include "MLCore/mathtypes.h"
@@ -15,4 +15,4 @@ typedef Eigen::SparseQR<SpMat, Eigen::NaturalOrdering<int> > SparseQR;
 
 }  // namespace ML
 
-#endif  // MLMATHSPARSETYPES_HPP_
+#endif  // MLCORE_MATHSPARSETYPES_H_

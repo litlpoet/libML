@@ -1,4 +1,8 @@
+// Copyright (c) 2015 Byungkuk Choi
+
 #include "MLCore/mathmatrixpredefined.h"
+
+#include <vector>
 
 namespace ML {
 

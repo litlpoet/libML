@@ -142,20 +142,6 @@ class GaussianInterpolation::Imple {
     _L2 = new SpMat(Lp.topRightCorner(Lp.rows(), n_knowns));
     _L1->makeCompressed();
   }
-
-  // void makeLMatrix(const int& dim, SpMat* L) {
-  //   std::vector<Trp> triples;
-  //   triples.reserve(3 * (dim - 2));
-
-  //   for (auto i = 0; i < dim - 2; ++i) {
-  //     triples.push_back(Trp(i, i, -1.f));
-  //     triples.push_back(Trp(i, i + 1, 2.f));
-  //     triples.push_back(Trp(i, i + 2, -1.f));
-  //   }
-
-  //   L->resize(dim - 2, dim);
-  //   L->setFromTriplets(triples.begin(), triples.end());
-  // }
 };
 
 /**

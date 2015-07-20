@@ -1,7 +1,7 @@
 // Copyright 2015 Byungkuk Choi.
 
-#ifndef MLGAUSSIANINTERPOLATION_HPP_
-#define MLGAUSSIANINTERPOLATION_HPP_
+#ifndef MLGAUSSIAN_GAUSSIANINTERPOLATION_H_
+#define MLGAUSSIAN_GAUSSIANINTERPOLATION_H_
 
 #include <memory>
 #include "MLCore/timeseriesdata.h"
@@ -24,4 +24,4 @@ class GaussianInterpolation {
 
 }  // namespace ML
 
-#endif  // MLGAUSSIANINTERPOLATION_HPP_
+#endif  // MLGAUSSIAN_GAUSSIANINTERPOLATION_H_
