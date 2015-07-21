@@ -2,7 +2,6 @@
 
 #include "MLGaussian/gaussianinterpolation.h"
 
-#include <assert.h>
 #include <algorithm>
 #include <cassert>
 #include <exception>

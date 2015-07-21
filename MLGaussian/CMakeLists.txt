@@ -1,6 +1,7 @@
 add_library(
   MLGaussian
   gaussianinterpolation.cpp
+  gaussianinterpolationnoisy.cpp
   )
 
 add_subdirectory(unit_test)
