@@ -5,6 +5,7 @@
 
 #include <gtest/gtest.h>
 #include "MLGaussian/gaussianinterpolation.h"
+#include "MLGaussian/gaussianinterpolationnoisy.h"
 
 class TestMLGaussianInterp : public ::testing::Test {
  protected:
@@ -27,9 +28,23 @@ class TestMLGaussianInterp : public ::testing::Test {
 
 class TestMLGaussianInterpNoisy : public ::testing::Test {
  protected:
-  void SetUp() {}
+  void SetUp() {
+    _frames = 10;
 
-  void TearDown() {}
+    _t_data.insert(ML::MakeTimeSample(0, 3, 0.0f, 0.0f, 0.0f));
+    _t_data.insert(ML::MakeTimeSample(1, 3, 0.0f, 0.0f, 0.0f));
+    _t_data.insert(ML::MakeTimeSample(5, 3, 1.0f, 2.0f, 0.5f));
+    _t_data.insert(ML::MakeTimeSample(8, 3, 0.0f, 0.0f, 0.0f));
+    _t_data.insert(ML::MakeTimeSample(9, 3, 0.0f, 0.0f, 0.0f));
+
+    _g_interp_noisy = new ML::GaussianInterpolationNoisy(_frames, _t_data);
+  }
+
+  void TearDown() { delete _g_interp_noisy; }
+
+  int _frames;
+  ML::TimeSeriesMap _t_data;
+  ML::GaussianInterpolationNoisy* _g_interp_noisy;
 };
 
 #endif  // MLGAUSSIAN_UNIT_TEST_TEST_GAUSSIANINTERP_H_

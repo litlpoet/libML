@@ -4,19 +4,13 @@
 
 #include <algorithm>
 #include <cassert>
-#include <exception>
 #include <vector>
 #include <iostream>
 
 #include "MLCore/mathmatrixpredefined.h"
+#include "MLCore/exceptions.h"
 
 namespace ML {
-
-class BadInputException : public std::exception {
-  virtual const char* what() const throw() {
-    return "GaussianInterpolation | Bad input exception";
-  }
-} bad_input_ex;
 
 class GaussianInterpolation::Imple {
  public:
@@ -90,6 +84,9 @@ class GaussianInterpolation::Imple {
 
  private:
   void checkInputValidity() {
+    BadInputException bad_input_ex(
+        "GaussianInterpolation | Bad input exception");
+
     if (_D < 2) throw bad_input_ex;
 
     for (const auto& it : _time_series_map)

@@ -4,21 +4,18 @@
 
 #include <Eigen/Dense>
 #include <vector>
+#include <iostream>
 
 #include "MLCore/mathmatrixpredefined.h"
+#include "MLCore/exceptions.h"
 
 namespace ML {
-
-class BadInputException : public std::exception {
-  virtual const char* what() const throw() {
-    return "GaussianInterpolationNoisy | Bad input exception";
-  }
-} bad_input_ex;
 
 class GaussianInterpolationNoisy::Imple {
  public:
   int _D;      // discrete time dimension
   int _D_X;    // sample dimension
+  size_t _N;   // number of observed samples
   MatNxN* _Y;  // given sample values
   SpMat* _A;   // linear gaussian system matrix
   SpMat* _L;   // temporal smoothness prior matrix
@@ -27,6 +24,7 @@ class GaussianInterpolationNoisy::Imple {
   Imple(const int& D, const TimeSeriesMap& time_series_data)
       : _D(D),
         _D_X(0),
+        _N(time_series_data.size()),
         _Y(nullptr),
         _A(nullptr),
         _L(nullptr),
@@ -44,8 +42,31 @@ class GaussianInterpolationNoisy::Imple {
     _L = nullptr;
   }
 
+  bool solveSigmaAndMu(const float& lambda, MatNxN* Mu, MatNxN* Sigma) {
+    (*_L) *= lambda;
+
+    MatNxN LTL = MatNxN::Constant(_D, _D, 1e-3);
+    LTL += SpMat(_L->transpose() * (*_L));
+    MatNxN LTL_inv = LTL.llt().solve(MatNxN::Identity(_D, _D));
+
+    SpMat AT = _A->transpose();
+    MatNxN Sigma_y = MatNxN::Identity(_N, _N);
+    MatNxN Sigma_y_inv = Sigma_y.inverse();
+    MatNxN Sigma_rh = LTL + AT * Sigma_y_inv * (*_A);
+    (*Sigma) = Sigma_rh.llt().solve(MatNxN::Identity(_D, _D));
+
+    MatNxN LGS = (*Sigma) * AT * Sigma_y;
+    Mu->resize(_D, _D_X);
+    for (int i = 0; i < _D_X; ++i) Mu->col(i) = LGS * _Y->col(i);
+
+    return true;
+  }
+
  private:
   void checkInputValidity() {
+    BadInputException bad_input_ex(
+        "GaussianInterpolationNoisy | Bad input exception");
+
     if (_D < 2) throw bad_input_ex;
 
     for (const auto& it : _time_series_map)
@@ -53,18 +74,16 @@ class GaussianInterpolationNoisy::Imple {
   }
 
   void prepareSystem() {
-    const size_t N = _time_series_map.size();
     _D_X = static_cast<int>(_time_series_map.begin()->second.size());
 
     int i = 0;
-    _Y = new MatNxN(N, _D_X);
+    _Y = new MatNxN(_N, _D_X);
     std::vector<Trp> triples;
     for (const auto& it : _time_series_map) {
-      _Y->row(i++) = it.second.transpose();
-      triples.push_back(Trp(i, it.first, 1));
+      _Y->row(i) = it.second.transpose();
+      triples.push_back(Trp(i++, it.first, 1));
     }
-
-    _A = new SpMat(N, _D);
+    _A = new SpMat(_N, _D);
     _A->setFromTriplets(triples.begin(), triples.end());
 
     _L = new SpMat;
@@ -81,23 +100,7 @@ GaussianInterpolationNoisy::~GaussianInterpolationNoisy() {}
 bool GaussianInterpolationNoisy::solve(const float& lambda, MatNxN* Mu,
                                        MatNxN* Sigma) {
   bool result = false;
-
-  (*_p->_L) *= lambda;
-
-  MatNxN LTL = _p->_L->transpose() * *(_p->_L);
-  LTL = (LTL.array() + 1e-3).matrix();
-  MatNxN LTL_inv = LTL.llt().solve(MatNxN::Identity(_p->_D, _p->_D));
-
-  MatNxN Sigma_y = MatNxN::Identity(_p->_A->rows(), _p->_A->rows());
-  MatNxN Sigma_y_inv = Sigma_y.inverse();
-  MatNxN Sigma_rh = LTL + _p->_A->transpose() * Sigma_y_inv * (*_p->_A);
-  (*Sigma) = Sigma_rh.llt().solve(MatNxN::Identity(_p->_D, _p->_D));
-
-  MatNxN PreMat = (*Sigma) * _p->_A->transpose() * Sigma_y;
-  Mu->resize(_p->_D, _p->_D_X);
-  for ( int i=0; i < _p->_D_X ; ++i)
-    Mu->col(i) = PreMat * _p->_Y->col(i);
-
+  result |= _p->solveSigmaAndMu(lambda, Mu, Sigma);
   return result;
 }
 
