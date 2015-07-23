@@ -2,7 +2,10 @@ cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
 
 project("MachineLearningLibrary")
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
+## ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules :
+##     everytime s:/VersionControl/Research/libML/cmake/modules
 
 enable_testing()
 
