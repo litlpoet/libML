@@ -13,16 +13,21 @@ namespace ML {
 
 class GaussianInterpolationNoisy::Imple {
  public:
-  int _D;      // discrete time dimension
-  int _D_X;    // sample dimension
-  size_t _N;   // number of observed samples
-  MatNxN* _Y;  // given sample values
-  SpMat* _A;   // linear gaussian system matrix
-  SpMat* _L;   // temporal smoothness prior matrix
+  bool _boundary;     // boundary condition toggle
+  bool _prior_dirty;  // dirty bit for prior computation
+  int _D;             // discrete time dimension
+  int _D_X;           // sample dimension
+  size_t _N;          // number of observed samples
+  MatNxN* _Y;         // given sample values
+  SpMat* _A;          // linear gaussian system matrix
+  SpMat* _L;          // temporal smoothness prior matrix
+  SpMat _L_p;         // prior mat multiplied by lambda
   TimeSeriesMap _time_series_map;
 
   Imple(const int& D, const TimeSeriesMap& time_series_data)
-      : _D(D),
+      : _boundary(false),
+        _prior_dirty(true),
+        _D(D),
         _D_X(0),
         _N(time_series_data.size()),
         _Y(nullptr),
@@ -43,10 +48,11 @@ class GaussianInterpolationNoisy::Imple {
   }
 
   bool solveSigmaAndMu(const float& lambda, MatNxN* Mu, MatNxN* Sigma) {
-    (*_L) *= lambda;
+    preparePrior();
+    multiplyLambdaToPrior(lambda);
 
-    MatNxN LTL = MatNxN::Constant(_D, _D, 1e-3);
-    LTL += SpMat(_L->transpose() * (*_L));
+    // MatNxN LTL = MatNxN::Constant(_D, _D, 1e-3);
+    MatNxN LTL = SpMat(_L_p.transpose() * _L_p);
     MatNxN LTL_inv = LTL.llt().solve(MatNxN::Identity(_D, _D));
 
     SpMat AT = _A->transpose();
@@ -55,7 +61,7 @@ class GaussianInterpolationNoisy::Imple {
     MatNxN Sigma_rh = LTL + AT * Sigma_y_inv * (*_A);
     (*Sigma) = Sigma_rh.llt().solve(MatNxN::Identity(_D, _D));
 
-    MatNxN LGS = (*Sigma) * AT * Sigma_y;
+    MatNxN LGS = (*Sigma) * AT * Sigma_y_inv;
     Mu->resize(_D, _D_X);
     for (int i = 0; i < _D_X; ++i) Mu->col(i) = LGS * _Y->col(i);
 
@@ -87,7 +93,24 @@ class GaussianInterpolationNoisy::Imple {
     _A->setFromTriplets(triples.begin(), triples.end());
 
     _L = new SpMat;
-    MakeFiniteDiffernceMat(_D, _L);
+  }
+
+  void preparePrior() {
+    if (!_prior_dirty) return;
+
+    if (_boundary)
+      MakeFiniteDiffereceMatWithBoundary(_D, _L);
+    else
+      MakeFiniteDiffernceMat(_D, _L);
+    _prior_dirty = false;
+  }
+
+  void multiplyLambdaToPrior(const float& lambda) {
+    _L_p = (*_L);
+    if (_boundary)
+      _L_p.block(1, 1, _L->rows() - 2, _L->cols() - 2) *= lambda;
+    else
+      _L_p *= lambda;
   }
 };
 
@@ -102,6 +125,11 @@ bool GaussianInterpolationNoisy::solve(const float& lambda, MatNxN* Mu,
   bool result = false;
   result |= _p->solveSigmaAndMu(lambda, Mu, Sigma);
   return result;
+}
+
+void GaussianInterpolationNoisy::setBoundaryConstraint(const bool& b) {
+  if (_p->_boundary != b) _p->_prior_dirty = true;
+  _p->_boundary = b;
 }
 
 }  // namespace ML
