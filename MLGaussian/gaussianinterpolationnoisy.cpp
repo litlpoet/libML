@@ -120,6 +120,10 @@ GaussianInterpolationNoisy::GaussianInterpolationNoisy(
 
 GaussianInterpolationNoisy::~GaussianInterpolationNoisy() {}
 
+int GaussianInterpolationNoisy::dimension() { return _p->_D; }
+
+int GaussianInterpolationNoisy::sampleDimension() { return _p->_D_X; }
+
 bool GaussianInterpolationNoisy::solve(const float& lambda, MatNxN* Mu,
                                        MatNxN* Sigma) {
   bool result = false;
@@ -130,6 +134,9 @@ bool GaussianInterpolationNoisy::solve(const float& lambda, MatNxN* Mu,
 void GaussianInterpolationNoisy::setBoundaryConstraint(const bool& b) {
   if (_p->_boundary != b) _p->_prior_dirty = true;
   _p->_boundary = b;
+}
+const TimeSeriesMap& GaussianInterpolationNoisy::timeSeriesMap() const {
+  return _p->_time_series_map;
 }
 
 }  // namespace ML

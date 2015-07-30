@@ -15,9 +15,15 @@ class GaussianInterpolationNoisy {
 
   ~GaussianInterpolationNoisy();
 
+  int dimension();
+
+  int sampleDimension();
+
   bool solve(const float& lambda, MatNxN* Mu, MatNxN* Sigma);
 
   void setBoundaryConstraint(const bool& b);
+
+  const TimeSeriesMap& timeSeriesMap() const;
 
  private:
   class Imple;
