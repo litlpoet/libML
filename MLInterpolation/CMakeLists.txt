@@ -1,16 +1,19 @@
 add_library(
-  MLGaussian
+  MLInterpolation
+  interpolation.cpp
   gaussianinterpolation.cpp
   gaussianinterpolationnoisy.cpp
+  multilevelbsplineinterpolation.cpp
   )
 
 add_subdirectory(unit_test)
 
 target_link_libraries(
-  MLGaussian
+  MLInterpolation
   MLCore
   )
 
 target_compile_features(
-  MLGaussian PRIVATE cxx_range_for
+  MLInterpolation PRIVATE cxx_range_for
   )
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

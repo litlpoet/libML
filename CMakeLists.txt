@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
-
 project("MachineLearningLibrary")
-
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 ## ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules :
@@ -35,37 +33,17 @@ else()
   set(EIGEN3_DIR "/usr/local/include/eigen3")
 endif()
 
-include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}
-  ${EIGEN3_DIR}
-  )
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${EIGEN3_DIR})
 
 add_subdirectory(MLCore)
+add_subdirectory(MLInterpolation)
 
-add_subdirectory(MLGaussian)
+add_executable(LibMLMain src/main.cpp)
+target_link_libraries(LibMLMain MLCore MLInterpolation)
+target_compile_features(LibMLMain PRIVATE cxx_range_for)
 
-add_executable(
-  LibMLMain
-  src/main.cpp
-  )
-
-target_link_libraries(
-  LibMLMain
-  MLCore
-  MLGaussian
-  )
-
-target_compile_features(
-  LibMLMain PRIVATE cxx_range_for
-  )
-
-add_test(
-  LibMLMainTest
-  LibMLMain
-  )
+add_test(LibMLMainTest LibMLMain)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-set(CONFIGURED_ONCE TRUE
-  CACHE INTERNAL
+set(CONFIGURED_ONCE TRUE CACHE INTERNAL
   "A flag showing that CMake has configured at least once")

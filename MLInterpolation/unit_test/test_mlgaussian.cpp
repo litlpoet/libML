@@ -1,6 +1,6 @@
 // Copyright (c) 2015 Byungkuk Choi
 
-#include "MLGaussian/unit_test/test_gaussianinterp.h"
+#include "MLInterpolation/unit_test/test_gaussianinterp.h"
 
 // Test Gaussian Interpolation (without noise assumption)
 
@@ -41,4 +41,20 @@ TEST_F(TestMLGaussianInterpNoisy, PrecisionTest) {
   _g_interp_noisy->solve(0.01f, &mean, &var);
   std::cout << "Noisy mean with precision " << 0.01f << ":" << std::endl;
   std::cout << mean << std::endl;
+}
+
+// Test Multi-level B-Spline Interpolation
+
+TEST_F(TestMLMultiLevelBSplineInterp, DimensionTest) {
+  ML::MatNxN res;
+  _mbsp_interp->solve(6, 2, &res);
+  EXPECT_EQ(_frames, res.rows());
+  EXPECT_EQ(3, res.cols());
+}
+
+TEST_F(TestMLMultiLevelBSplineInterp, PrecisionTest) {
+  ML::MatNxN res;
+  _mbsp_interp->solve(6, 2, &res);
+  std::cout << "Multi level interp with level " << 2 << ":" << std::endl;
+  std::cout << res << std::endl;
 }
