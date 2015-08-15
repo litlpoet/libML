@@ -3,19 +3,19 @@
 #ifndef MLINTERPOLATION_MULTILEVELBSPLINEINTERPOLATION_H_
 #define MLINTERPOLATION_MULTILEVELBSPLINEINTERPOLATION_H_
 
-#include <memory>
-#include "MLCore/timeseriesdata.h"
+#include "MLInterpolation/interpolation.h"
 
 namespace ML {
 
-class MultiLevelBSplineInterpolation {
+class MultiLevelBSplineInterpolation : public Interpolation {
  public:
   MultiLevelBSplineInterpolation(const int& D,
                                  const TimeSeriesMap& time_series_map);
 
   ~MultiLevelBSplineInterpolation();
 
-  bool solve(const int& initial_n_knots, const int& level, MatNxN* result_mat);
+  bool solve(const int& initial_n_knots, const int& level,
+             MatNxN* result_mat) final;
 
  private:
   class Imple;

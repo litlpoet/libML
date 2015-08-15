@@ -14,8 +14,9 @@ class Interpolation {
 
   virtual ~Interpolation();
 
-  virtual bool solve(const float& lambda, MatNxN* Mu,
-                     MatNxN* Sigma = nullptr) = 0;
+  virtual bool solve(const float& lambda, MatNxN* Mu, MatNxN* Sigma = nullptr);
+
+  virtual bool solve(const int& initial_n_knots, const int& level, MatNxN* R);
 
   const int& timeDimension() const;
 

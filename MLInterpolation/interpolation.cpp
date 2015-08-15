@@ -1,7 +1,6 @@
 // Copyright (C) 2015 BK
 
 #include "MLInterpolation/interpolation.h"
-
 #include "MLCore/exceptions.h"
 
 namespace ML {
@@ -41,6 +40,10 @@ Interpolation::Interpolation(const int& D, const TimeSeriesMap& time_series_map)
     : _p(new Interpolation::Imple(D, time_series_map)) {}
 
 Interpolation::~Interpolation() {}
+
+bool Interpolation::solve(const float&, MatNxN*, MatNxN*) { return false; }
+
+bool Interpolation::solve(const int&, const int&, MatNxN*) { return false; }
 
 const int& Interpolation::timeDimension() const { return _p->_D; }
 
