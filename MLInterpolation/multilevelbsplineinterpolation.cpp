@@ -11,24 +11,30 @@ namespace ML {
 
 class MultiLevelBSplineInterpolation::Imple {
  public:
-  MatNxN *_X2;    // (sorted) given sample data
-  MatNxN *_X2_p;  // (sorted) approximated sample
-  VecNi *_frms;   // (sorted) frame indexs
+  MatNxN *_X;      // (sorted) given sample data (not changed)
+  MatNxN *_X_l;    // (sorted) given sample data for each level
+  MatNxN *_X_apr;  // (sorted) approximated sample
+  VecNi *_frms;    // (sorted) frame indexs
   std::vector<bool> _has_data_at_t;
   Mat4x4 _CubicBSplBasis;
 
   Imple(const int &D, const int &D_X, const TimeSeriesMap &time_series_map)
-      : _X2(nullptr), _X2_p(nullptr), _frms(nullptr), _has_data_at_t(D, false) {
+      : _X(nullptr),
+        _X_l(nullptr),
+        _X_apr(nullptr),
+        _frms(nullptr),
+        _has_data_at_t(D, false) {
     CubicBSpline(&_CubicBSplBasis);
     prepareSystem(D_X, time_series_map);
   }
 
   ~Imple() {
-    if (_X2) delete _X2;
-    if (_X2_p) delete _X2_p;
+    if (_X) delete _X;
+    if (_X_l) delete _X_l;
+    if (_X_apr) delete _X_apr;
     if (_frms) delete _frms;
-    _X2 = nullptr;
-    _X2_p = nullptr;
+    _X_l = nullptr;
+    _X_apr = nullptr;
     _frms = nullptr;
   }
 
@@ -40,27 +46,26 @@ class MultiLevelBSplineInterpolation::Imple {
     return true;
   }
 
-  void updateDisplacements() {
-    MatNxN D = (*_X2) - (*_X2_p);
-    (*_X2) = D;
+  void updateNextLevelTargets() {
+    MatNxN D = (*_X_l) - (*_X_apr);
+    (*_X_l) = D;
   }
 
  private:
   void prepareSystem(const int &D_X, const TimeSeriesMap &time_series_map) {
     const size_t N = time_series_map.size();
 
-    _X2 = new MatNxN(N, D_X);
-    _X2_p = new MatNxN(N, D_X);
+    _X = new MatNxN(N, D_X);
+    _X_l = new MatNxN(N, D_X);
+    _X_apr = new MatNxN(N, D_X);
     _frms = new VecNi(N);
-
-    _X2_p->setZero();
 
     // make data matrix
     int i = 0;
     for (const auto &it : time_series_map) {
       _has_data_at_t[it.first] = true;
       (*_frms)(i) = it.first;
-      _X2->row(i++) = it.second.transpose();
+      _X->row(i++) = it.second.transpose();
     }
   }
 
@@ -87,7 +92,7 @@ class MultiLevelBSplineInterpolation::Imple {
 
       for (int j = 0; j < 4; ++j) {
         cp_id = c_knot + j;
-        CPS->row(cp_id) += basis_sq(j) * _X2->row(i) * basis(j) / sq_sum;
+        CPS->row(cp_id) += basis_sq(j) * _X_l->row(i) * basis(j) / sq_sum;
         W(cp_id) += basis_sq(j);
       }
     }
@@ -105,7 +110,7 @@ class MultiLevelBSplineInterpolation::Imple {
     for (int f = 0, i = 0; f < D; ++f) {
       RVecN res = evaluate(D, D_X, n_knots, f, CPS);
       M->row(f) = res;
-      if (_has_data_at_t[f]) _X2_p->row(i++) = res;
+      if (_has_data_at_t[f]) _X_apr->row(i++) = res;
     }
   }
 
@@ -152,16 +157,18 @@ MultiLevelBSplineInterpolation::~MultiLevelBSplineInterpolation() {}
 bool MultiLevelBSplineInterpolation::solve(const int &initial_n_knots,
                                            const int &level,
                                            MatNxN *result_mat) {
-  bool result = false;
   std::cout << "start to solve multi-level bspline" << std::endl;
+  bool result = false;
   const int &D = timeDimension();
   const int &D_X = dataDimension();
+  *result_mat = MatNxN::Zero(D, D_X);
+  *_p->_X_l = *_p->_X;  // deep copy;
   MatNxN M(D, D_X);
   for (int n_knots = initial_n_knots, l = 0; l < level; n_knots *= 2, ++l) {
     result |= _p->solveBSpline(D, D_X, n_knots, &M);
-    _p->updateDisplacements();
+    _p->updateNextLevelTargets();
+    *result_mat += M;
   }
-  *result_mat = M;
   std::cout << "solve finished" << std::endl;
   return result;
 }

@@ -10,7 +10,8 @@ namespace ML {
 
 class BadInputException : public std::exception {
  public:
-  BadInputException(const std::string& msg) : std::exception(), _msg(msg) {}
+  explicit BadInputException(const std::string& msg)
+      : std::exception(), _msg(msg) {}
 
   virtual const char* what() const throw() { return _msg.c_str(); }
 

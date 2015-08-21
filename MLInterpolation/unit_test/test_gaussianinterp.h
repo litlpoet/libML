@@ -1,7 +1,7 @@
 // Copyright (c) 2015 Byungkuk Choi
 
-#ifndef MLGAUSSIAN_UNIT_TEST_TEST_GAUSSIANINTERP_H_
-#define MLGAUSSIAN_UNIT_TEST_TEST_GAUSSIANINTERP_H_
+#ifndef MLINTERPOLATION_UNIT_TEST_TEST_GAUSSIANINTERP_H_
+#define MLINTERPOLATION_UNIT_TEST_TEST_GAUSSIANINTERP_H_
 
 #include <gtest/gtest.h>
 #include "MLInterpolation/gaussianinterpolation.h"
@@ -67,4 +67,4 @@ class TestMLMultiLevelBSplineInterp : public ::testing::Test {
   ML::MultiLevelBSplineInterpolation* _mbsp_interp;
 };
 
-#endif  // MLGAUSSIAN_UNIT_TEST_TEST_GAUSSIANINTERP_H_
+#endif  // MLINTERPOLATION_UNIT_TEST_TEST_GAUSSIANINTERP_H_
