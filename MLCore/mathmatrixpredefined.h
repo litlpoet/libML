@@ -11,6 +11,8 @@ bool MakeFiniteDiffernceMat(const int& dim, SpMat* L);
 
 bool MakeFiniteDiffereceMatWithBoundary(const int& dim, SpMat* L);
 
+bool MakeFiniteDifferenceMatWithC2Boundary(const int& dim, SpMat* L);
+
 }  // namespace ML
 
 #endif  // MLCORE_MATHMATRIXPREDEFINED_H_

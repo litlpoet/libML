@@ -13,6 +13,7 @@ namespace ML {
 class GaussianInterpolationNoisy::Imple {
  public:
   bool _boundary;     // boundary condition toggle
+  bool _boundary_c2;  // boundary condition (c2) toggle
   bool _prior_dirty;  // dirty bit for prior computation
   size_t _N;          // number of observed samples
   MatNxN* _Y;         // given sample values
@@ -117,4 +118,8 @@ void GaussianInterpolationNoisy::setBoundaryConstraint(const bool& b) {
   _p->_boundary = b;
 }
 
+void GaussianInterpolationNoisy::setBoundaryConstraintC2(const bool& b) {
+  if (_p->_boundary_c2 != b) _p->_prior_dirty = true;
+  _p->_boundary_c2 = b;
+}
 }  // namespace ML

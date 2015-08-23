@@ -43,4 +43,24 @@ bool MakeFiniteDiffereceMatWithBoundary(const int& dim, SpMat* L) {
   return true;
 }
 
+bool MakeFiniteDifferenceMatWithC2Boundary(const int& dim, SpMat* L) {
+  std::vector<Trp> triples;
+  triples.reserve(3 * dim);
+
+  triples.push_back(Trp(0, 0, 1.0f));
+
+  for (auto i = 1; i < dim - 1; ++i) {
+    triples.push_back(Trp(i, i - 1, -1.f));
+    triples.push_back(Trp(i, i, 2.f));
+    triples.push_back(Trp(i, i + 1, -1.f));
+  }
+
+  triples.push_back(Trp(dim - 1, dim - 1, 1.0f));
+
+  L->resize(dim, dim);
+  L->setFromTriplets(triples.begin(), triples.end());
+
+  return true;
+}
+
 }  // namespace ML

@@ -18,6 +18,8 @@ class GaussianInterpolationNoisy : public Interpolation {
 
   void setBoundaryConstraint(const bool& b);
 
+  void setBoundaryConstraintC2(const bool& b);
+
  private:
   class Imple;
   std::unique_ptr<Imple> _p;
