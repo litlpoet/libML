@@ -7,22 +7,22 @@
 #include <iostream>
 
 #include "MLCore/mathmatrixpredefined.h"
+#include "MLInterpolation/interpolationtypes.h"
 
 namespace ML {
 
 class GaussianInterpolationNoisy::Imple {
  public:
-  bool _boundary;     // boundary condition toggle
-  bool _boundary_c2;  // boundary condition (c2) toggle
-  bool _prior_dirty;  // dirty bit for prior computation
-  size_t _N;          // number of observed samples
-  MatNxN* _Y;         // given sample values
-  SpMat* _A;          // linear gaussian system matrix
-  SpMat* _L;          // temporal smoothness prior matrix
-  SpMat _L_p;         // prior mat multiplied by lambda
+  G_NOISY_BOUNDARY_TYPE _boundary;  // boundary condition type
+  bool _prior_dirty;                // dirty bit for prior computation
+  size_t _N;                        // number of observed samples
+  MatNxN* _Y;                       // given sample values
+  SpMat* _A;                        // linear gaussian system matrix
+  SpMat* _L;                        // temporal smoothness prior matrix
+  SpMat _L_p;                       // prior mat multiplied by lambda
 
   Imple(const int& D, const int& D_X, const TimeSeriesMap& time_series_data)
-      : _boundary(false),
+      : _boundary(G_BOUND_NONE),
         _prior_dirty(true),
         _N(time_series_data.size()),
         _Y(nullptr),
@@ -80,17 +80,21 @@ class GaussianInterpolationNoisy::Imple {
   void preparePrior(const int& D) {
     if (!_prior_dirty) return;
 
-    if (_boundary)
-      MakeFiniteDiffereceMatWithBoundary(D, _L);
+    if (_boundary == G_BOUND_C1)
+      MakeFiniteDifferenceMatWithBoundary(D, _L);
+    else if (_boundary == G_BOUND_C2)
+      MakeFiniteDifferenceMatWithC2Boundary(D, _L);
     else
-      MakeFiniteDiffernceMat(D, _L);
+      MakeFiniteDifferenceMat(D, _L);
     _prior_dirty = false;
   }
 
   void multiplyLambdaToPrior(const float& lambda) {
     _L_p = (*_L);
-    if (_boundary)
-      _L_p.block(1, 1, _L->rows() - 2, _L->cols() - 2) *= lambda;
+    if (_boundary == G_BOUND_C1)
+      _L_p.block(1, 0, _L->rows() - 2, _L->cols()) *= lambda;
+    else if (_boundary == G_BOUND_C2)
+      _L_p.block(2, 0, _L->rows() - 4, _L->cols()) *= lambda;
     else
       _L_p *= lambda;
   }
@@ -113,13 +117,10 @@ bool GaussianInterpolationNoisy::solve(const float& lambda, MatNxN* Mu,
   return res;
 }
 
-void GaussianInterpolationNoisy::setBoundaryConstraint(const bool& b) {
+void GaussianInterpolationNoisy::setBoundaryConstraint(const int& b_type) {
+  G_NOISY_BOUNDARY_TYPE b = (G_NOISY_BOUNDARY_TYPE)(b_type);
   if (_p->_boundary != b) _p->_prior_dirty = true;
   _p->_boundary = b;
 }
 
-void GaussianInterpolationNoisy::setBoundaryConstraintC2(const bool& b) {
-  if (_p->_boundary_c2 != b) _p->_prior_dirty = true;
-  _p->_boundary_c2 = b;
-}
 }  // namespace ML

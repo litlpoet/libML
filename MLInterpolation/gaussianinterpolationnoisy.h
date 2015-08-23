@@ -16,9 +16,7 @@ class GaussianInterpolationNoisy : public Interpolation {
 
   bool solve(const float& lambda, MatNxN* Mu, MatNxN* Sigma = nullptr) final;
 
-  void setBoundaryConstraint(const bool& b);
-
-  void setBoundaryConstraintC2(const bool& b);
+  void setBoundaryConstraint(const int& b_type);
 
  private:
   class Imple;

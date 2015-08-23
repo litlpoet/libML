@@ -80,7 +80,7 @@ class GaussianInterpolation::Imple {
     for (const auto& it : time_series_map) _has_data_at_t[it.first] = true;
 
     SpMat L;
-    MakeFiniteDiffernceMat(D, &L);
+    MakeFiniteDifferenceMat(D, &L);
     _X2 = new MatNxN(N, D_X);
 
     // make permutation vector and arrange data accordingly

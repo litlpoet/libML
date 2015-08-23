@@ -7,9 +7,9 @@
 
 namespace ML {
 
-bool MakeFiniteDiffernceMat(const int& dim, SpMat* L);
+bool MakeFiniteDifferenceMat(const int& dim, SpMat* L);
 
-bool MakeFiniteDiffereceMatWithBoundary(const int& dim, SpMat* L);
+bool MakeFiniteDifferenceMatWithBoundary(const int& dim, SpMat* L);
 
 bool MakeFiniteDifferenceMatWithC2Boundary(const int& dim, SpMat* L);
 
