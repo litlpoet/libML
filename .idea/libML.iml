@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="CPP_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$/../../Libraries/gmock">
+      <sourceFolder url="file://$MODULE_DIR$/../../Libraries/gmock/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../Libraries/gmock/gtest/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../Libraries/gmock/gtest/cmake/internal_utils.cmake" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../Libraries/gmock/gtest/src/gtest-all.cc" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../Libraries/gmock/gtest/src/gtest_main.cc" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../Libraries/gmock/src/gmock-all.cc" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../Libraries/gmock/src/gmock_main.cc" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/MLCore/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/MLCore/mathmatrixpredefined.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/MLCore/mathmatrixpredefined.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/MLCore/timeseriesdata.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/MLCore/timeseriesdata.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/MLCore/unit_test/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/MLCore/unit_test/test_mlcore.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/MLInterpolation/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/MLInterpolation/gaussianinterpolation.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/MLInterpolation/gaussianinterpolation.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/MLInterpolation/gaussianinterpolationnoisy.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/MLInterpolation/gaussianinterpolationnoisy.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/MLInterpolation/interpolation.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/MLInterpolation/interpolation.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/MLInterpolation/multilevelbsplineinterpolation.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/MLInterpolation/multilevelbsplineinterpolation.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/MLInterpolation/unit_test/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/MLInterpolation/unit_test/test_mlgaussian.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/cmake/modules/gmock.cmake" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main.cpp" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="Header Search Paths">
+        <CLASSES>
+          <root url="file:///usr/include" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include-fixed" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include/cilk" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include/sanitizer" />
+          <root url="file:///usr/local/include" />
+        </CLASSES>
+        <SOURCES>
+          <root url="file:///usr/include" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include-fixed" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include/cilk" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include/sanitizer" />
+          <root url="file:///usr/local/include" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+  </component>
+</module>
