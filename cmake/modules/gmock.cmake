@@ -1,4 +1,4 @@
-set(GMOCK_DIR "../../Libraries/gmock"  # starting from the project root
+set(GTEST_DIR "../../Libraries/cpp/googletest"  # starting from the project root
   CACHE PATH
   "The path to the Google mock test framework")
 
@@ -10,13 +10,13 @@ elseif (APPLE)
   add_definitions(-DGTEST_USE_OWN_TR1_TUPLE=1)
 endif()
 
-add_subdirectory(${GMOCK_DIR} ${CMAKE_BINARY_DIR}/gmock)
+add_subdirectory(${GTEST_DIR} ${CMAKE_BINARY_DIR}/googletest)
 set_property(TARGET gtest gmock gmock_main APPEND_STRING PROPERTY COMPILE_FLAGS " -w")
 
 include_directories(
   SYSTEM
-  ${GMOCK_DIR}/gtest/include
-  ${GMOCK_DIR}/include
+  ${GTEST_DIR}/googletest/include
+  ${GTEST_DIR}/googlemock/include
   )
 
 # add_gmock_test(<target> <sources>...)
