@@ -9,14 +9,14 @@ namespace ML {
 
 class GaussianInterpolationNoisy : public Interpolation {
  public:
-  GaussianInterpolationNoisy(const int& D,
-                             const TimeSeriesMap& time_series_data);
+  GaussianInterpolationNoisy(int const& D,
+                             TimeSeriesMap const& time_series_data);
 
   ~GaussianInterpolationNoisy();
 
-  bool solve(const float& lambda, MatNxN* Mu, MatNxN* Sigma = nullptr) final;
+  bool solve(float const& lambda, MatNxN* Mu, MatNxN* Sigma = nullptr) final;
 
-  void setBoundaryConstraint(const int& b_type);
+  void setBoundaryConstraint(int const& b_type);
 
  private:
   class Imple;

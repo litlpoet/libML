@@ -10,19 +10,19 @@ namespace ML {
 
 class Interpolation {
  public:
-  Interpolation(const int& D, const TimeSeriesMap& time_series_map);
+  Interpolation(int const& D, TimeSeriesMap const& time_series_map);
 
   virtual ~Interpolation();
 
-  virtual bool solve(const float& lambda, MatNxN* Mu, MatNxN* Sigma = nullptr);
+  virtual bool solve(float const& lambda, MatNxN* Mu, MatNxN* Sigma = nullptr);
 
-  virtual bool solve(const int& initial_n_knots, const int& level, MatNxN* R);
+  virtual bool solve(int const& initial_n_knots, int const& level, MatNxN* R);
 
-  const int& timeDimension() const;
+  int const& timeDimension() const;
 
-  const int& dataDimension() const;
+  int const& dataDimension() const;
 
-  const TimeSeriesMap& timeSeriesMap() const;
+  TimeSeriesMap const& timeSeriesMap() const;
 
  protected:
   class Imple;
