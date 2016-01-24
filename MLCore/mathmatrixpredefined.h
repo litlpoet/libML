@@ -7,11 +7,11 @@
 
 namespace ML {
 
-bool MakeFiniteDifferenceMat(const int& dim, SpMat* L);
+bool MakeFiniteDifferenceMat(int const& dim, SpMat* L);
 
-bool MakeFiniteDifferenceMatWithBoundary(const int& dim, SpMat* L);
+bool MakeFiniteDifferenceMatWithBoundary(int const& dim, SpMat* L);
 
-bool MakeFiniteDifferenceMatWithC2Boundary(const int& dim, SpMat* L);
+bool MakeFiniteDifferenceMatWithC2Boundary(int const& dim, SpMat* L);
 
 }  // namespace ML
 

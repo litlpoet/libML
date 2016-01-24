@@ -13,7 +13,7 @@ namespace ML {
 
 class GaussianInterpolationNoisy::Imple {
  public:
-  G_NOISY_BOUNDARY_TYPE _boundary{G_BOUND_NONE};  // boundary condition type
+  BoundaryType _boundary{BoundaryType::None};  // boundary condition type
   bool _prior_dirty{true};  // dirty bit for prior computation
   size_t _N{0};             // number of observed samples
   MatNxN* _Y{nullptr};      // given sample values
@@ -75,9 +75,9 @@ class GaussianInterpolationNoisy::Imple {
   void preparePrior(int const& D) {
     if (!_prior_dirty) return;
 
-    if (_boundary == G_BOUND_C1)
+    if (_boundary == BoundaryType::C1)
       MakeFiniteDifferenceMatWithBoundary(D, _L);
-    else if (_boundary == G_BOUND_C2)
+    else if (_boundary == BoundaryType::C2)
       MakeFiniteDifferenceMatWithC2Boundary(D, _L);
     else
       MakeFiniteDifferenceMat(D, _L);
@@ -86,9 +86,9 @@ class GaussianInterpolationNoisy::Imple {
 
   void multiplyLambdaToPrior(float const& lambda) {
     _L_p = (*_L);
-    if (_boundary == G_BOUND_C1)
+    if (_boundary == BoundaryType::C1)
       _L_p.block(1, 0, _L->rows() - 2, _L->cols()) *= lambda;
-    else if (_boundary == G_BOUND_C2)
+    else if (_boundary == BoundaryType::C2)
       _L_p.block(2, 0, _L->rows() - 4, _L->cols()) *= lambda;
     else
       _L_p *= lambda;
@@ -113,7 +113,7 @@ bool GaussianInterpolationNoisy::solve(float const& lambda, MatNxN* Mu,
 }
 
 void GaussianInterpolationNoisy::setBoundaryConstraint(int const& b_type) {
-  G_NOISY_BOUNDARY_TYPE b = (G_NOISY_BOUNDARY_TYPE)(b_type);
+  BoundaryType b = static_cast<BoundaryType>(b_type);
   if (_p->_boundary != b) _p->_prior_dirty = true;
   _p->_boundary = b;
 }

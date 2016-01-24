@@ -9,11 +9,11 @@ namespace ML {
 
 class GaussianInterpolation : public Interpolation {
  public:
-  GaussianInterpolation(const int& D, const TimeSeriesMap& time_series_data);
+  GaussianInterpolation(int const& D, TimeSeriesMap const& time_series_data);
 
   ~GaussianInterpolation();
 
-  bool solve(const float& lambda, MatNxN* Mu, MatNxN* Sigma = nullptr) final;
+  bool solve(float const& lambda, MatNxN* Mu, MatNxN* Sigma = nullptr) final;
 
  private:
   class Imple;

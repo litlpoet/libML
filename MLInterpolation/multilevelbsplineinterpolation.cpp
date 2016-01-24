@@ -1,4 +1,4 @@
-// Copyright 2015 Byungkuk Choi.
+// Copyright (c) 2015 Byungkuk Choi.
 
 #include "MLInterpolation/multilevelbsplineinterpolation.h"
 
@@ -11,19 +11,15 @@ namespace ML {
 
 class MultiLevelBSplineInterpolation::Imple {
  public:
-  MatNxN *_X;      // (sorted) given sample data (not changed)
-  MatNxN *_X_l;    // (sorted) given sample data for each level
-  MatNxN *_X_apr;  // (sorted) approximated sample
-  VecNi *_frms;    // (sorted) frame indexs
+  MatNxN *_X{nullptr};      // (sorted) given sample data (not changed)
+  MatNxN *_X_l{nullptr};    // (sorted) given sample data for each level
+  MatNxN *_X_apr{nullptr};  // (sorted) approximated sample
+  VecNi *_frms{nullptr};    // (sorted) frame indexs
   std::vector<bool> _has_data_at_t;
   Mat4x4 _CubicBSplBasis;
 
-  Imple(const int &D, const int &D_X, const TimeSeriesMap &time_series_map)
-      : _X(nullptr),
-        _X_l(nullptr),
-        _X_apr(nullptr),
-        _frms(nullptr),
-        _has_data_at_t(D, false) {
+  Imple(int const &D, int const &D_X, TimeSeriesMap const &time_series_map)
+      : _has_data_at_t(D, false) {
     CubicBSpline(&_CubicBSplBasis);
     prepareSystem(D_X, time_series_map);
   }
@@ -38,7 +34,7 @@ class MultiLevelBSplineInterpolation::Imple {
     _frms = nullptr;
   }
 
-  bool solveBSpline(const int &D, const int &D_X, const int &n_knots,
+  bool solveBSpline(int const &D, int const &D_X, int const &n_knots,
                     MatNxN *M) {
     MatNxN CPS;
     solveControlPoints(D, D_X, n_knots, &CPS);
@@ -52,9 +48,8 @@ class MultiLevelBSplineInterpolation::Imple {
   }
 
  private:
-  void prepareSystem(const int &D_X, const TimeSeriesMap &time_series_map) {
-    const size_t N = time_series_map.size();
-
+  void prepareSystem(int const &D_X, TimeSeriesMap const &time_series_map) {
+    size_t N = time_series_map.size();
     _X = new MatNxN(N, D_X);
     _X_l = new MatNxN(N, D_X);
     _X_apr = new MatNxN(N, D_X);
@@ -62,26 +57,26 @@ class MultiLevelBSplineInterpolation::Imple {
 
     // make data matrix
     int i = 0;
-    for (const auto &it : time_series_map) {
+    for (auto const &it : time_series_map) {
       _has_data_at_t[it.first] = true;
       (*_frms)(i) = it.first;
       _X->row(i++) = it.second.transpose();
     }
   }
 
-  void solveControlPoints(const int &D, const int &D_X, const int &n_knots,
+  void solveControlPoints(int const &D, int const &D_X, int const &n_knots,
                           MatNxN *CPS) {
     // cubic B-spline need at least n_knots + 3 cps
-    const int n_cps = n_knots + 3;
+    int n_cps = n_knots + 3;
 
     // set control points and its weights zero initially
     *CPS = MatNxN::Zero(n_cps, D_X);
     VecN W = VecN::Zero(n_cps);
 
     // variables
-    int c_knot;
-    int cp_id;
-    float t_l, sq_sum;
+    int c_knot(0);
+    int cp_id(0);
+    float t_l(0.0f), sq_sum(0.0f);
     RVec4 basis, basis_sq;
 
     for (int i = 0, n = _frms->size(); i < n; ++i) {
@@ -105,8 +100,8 @@ class MultiLevelBSplineInterpolation::Imple {
     }
   }
 
-  void interpolate(const int &D, const int &D_X, const int &n_knots,
-                   const MatNxN &CPS, MatNxN *M) {
+  void interpolate(int const &D, int const &D_X, int const &n_knots,
+                   MatNxN const &CPS, MatNxN *M) {
     for (int f = 0, i = 0; f < D; ++f) {
       RVecN res = evaluate(D, D_X, n_knots, f, CPS);
       M->row(f) = res;
@@ -114,11 +109,11 @@ class MultiLevelBSplineInterpolation::Imple {
     }
   }
 
-  float frameToTime(const int &D, const int &n_knots, const int &f) {
+  float frameToTime(int const &D, int const &n_knots, int const &f) {
     return static_cast<float>(n_knots * f) / D;
   }
 
-  int localSplineDomain(const int &D, const int &n_knots, const int &f,
+  int localSplineDomain(int const &D, int const &n_knots, int const &f,
                         float *t_l) {
     float t = frameToTime(D, n_knots, f);
     int knot = static_cast<int>(t);
@@ -127,40 +122,40 @@ class MultiLevelBSplineInterpolation::Imple {
     return knot;
   }
 
-  RVec4 computeBasis(const float &t_l) {
+  RVec4 computeBasis(float const &t_l) {
     float t_sq = t_l * t_l;
     return (1.0f / 6.0f) * RVec4(t_sq * t_l, t_sq, t_l, 1.0f) * _CubicBSplBasis;
   }
 
-  RVecN evaluate(const int &D, const int &D_X, const int &n_knots, const int &f,
-                 const MatNxN &CPS) {
+  RVecN evaluate(int const &D, int const &D_X, int const &n_knots, int const &f,
+                 MatNxN const &CPS) {
     float t_l;
-    const int knot = localSplineDomain(D, n_knots, f, &t_l);
+    int knot = localSplineDomain(D, n_knots, f, &t_l);
     return evaluateLocal(t_l, CPS.block(knot, 0, 4, D_X));
   }
 
   template <typename Derived>
-  RVecN evaluateLocal(const float &t_l,
-                      const Eigen::MatrixBase<Derived> &local_pts) {
+  RVecN evaluateLocal(float const &t_l,
+                      Eigen::MatrixBase<Derived> const &local_pts) {
     return computeBasis(t_l) * local_pts;
   }
 };
 
 MultiLevelBSplineInterpolation::MultiLevelBSplineInterpolation(
-    const int &D, const TimeSeriesMap &time_series_map)
+    int const &D, TimeSeriesMap const &time_series_map)
     : Interpolation(D, time_series_map),
       _p(new MultiLevelBSplineInterpolation::Imple(D, dataDimension(),
                                                    time_series_map)) {}
 
 MultiLevelBSplineInterpolation::~MultiLevelBSplineInterpolation() {}
 
-bool MultiLevelBSplineInterpolation::solve(const int &initial_n_knots,
-                                           const int &level,
+bool MultiLevelBSplineInterpolation::solve(int const &initial_n_knots,
+                                           int const &level,
                                            MatNxN *result_mat) {
   std::cout << "start to solve multi-level bspline" << std::endl;
   bool result = false;
-  const int &D = timeDimension();
-  const int &D_X = dataDimension();
+  int const &D = timeDimension();
+  int const &D_X = dataDimension();
   *result_mat = MatNxN::Zero(D, D_X);
   *_p->_X_l = *_p->_X;  // deep copy;
   MatNxN M(D, D_X);

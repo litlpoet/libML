@@ -5,7 +5,7 @@
 
 namespace ML {
 
-enum G_NOISY_BOUNDARY_TYPE { G_BOUND_NONE = 0, G_BOUND_C1, G_BOUND_C2 };
+enum class BoundaryType { None = 0, C1, C2 };
 
 }  // namespace ML
 

@@ -42,7 +42,6 @@ typedef Eigen::Matrix<Scalar, 3, 3> Mat3x3;
 typedef Eigen::Matrix<Scalar, 4, 4> Mat4x4;
 typedef Eigen::Matrix<Scalar, 3, 4> Mat3x4;
 typedef Eigen::Matrix<Scalar, 4, 3> Mat4x3;
-
 typedef Eigen::PermutationMatrix<Eigen::Dynamic, Eigen::Dynamic> PmMat;
 typedef Eigen::VectorXi VecNi;
 

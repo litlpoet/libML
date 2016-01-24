@@ -9,12 +9,12 @@ namespace ML {
 
 class MultiLevelBSplineInterpolation : public Interpolation {
  public:
-  MultiLevelBSplineInterpolation(const int& D,
-                                 const TimeSeriesMap& time_series_map);
+  MultiLevelBSplineInterpolation(int const& D,
+                                 TimeSeriesMap const& time_series_map);
 
   ~MultiLevelBSplineInterpolation();
 
-  bool solve(const int& initial_n_knots, const int& level,
+  bool solve(int const& initial_n_knots, int const& level,
              MatNxN* result_mat) final;
 
  private:

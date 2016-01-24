@@ -6,7 +6,7 @@
 
 namespace ML {
 
-T_Sample MakeTimeSample(const int& f, int n_d, ...) {
+T_Sample MakeTimeSample(int const& f, int n_d, ...) {
   VecN sample(n_d);
   std::va_list args;
   va_start(args, n_d);

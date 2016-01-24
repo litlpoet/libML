@@ -3,17 +3,17 @@
 #ifndef MLCORE_TIMESERIESDATA_H_
 #define MLCORE_TIMESERIESDATA_H_
 
-#include <utility>
 #include <map>
+#include <utility>
 
 #include "MLCore/mathtypes.h"
 
 namespace ML {
 
-typedef std::pair<int, VecN> T_Sample;
-typedef std::map<int, VecN> TimeSeriesMap;
+using T_Sample = std::pair<int, VecN>;
+using TimeSeriesMap = std::map<int, VecN>;
 
-T_Sample MakeTimeSample(const int& f, int n_d, ...);
+T_Sample MakeTimeSample(int const& f, int n_d, ...);
 
 }  // namespace ML
 

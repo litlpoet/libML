@@ -4,6 +4,7 @@
 #define MLINTERPOLATION_UNIT_TEST_TEST_GAUSSIANINTERP_H_
 
 #include <gtest/gtest.h>
+
 #include "MLInterpolation/gaussianinterpolation.h"
 #include "MLInterpolation/gaussianinterpolationnoisy.h"
 #include "MLInterpolation/multilevelbsplineinterpolation.h"

@@ -4,8 +4,8 @@
 
 #include <algorithm>
 #include <cassert>
-#include <vector>
 #include <iostream>
+#include <vector>
 
 #include "MLCore/mathmatrixpredefined.h"
 
@@ -13,13 +13,13 @@ namespace ML {
 
 class GaussianInterpolation::Imple {
  public:
-  MatNxN* _X2;  // (sorted) given sample data
-  SpMat* _L1;   // prior for unknowns
-  SpMat* _L2;   // prior for knowns
+  MatNxN* _X2{nullptr};  // (sorted) given sample data
+  SpMat* _L1{nullptr};   // prior for unknowns
+  SpMat* _L2{nullptr};   // prior for knowns
   std::vector<bool> _has_data_at_t;
 
-  Imple(const int& D, const int& D_X, const TimeSeriesMap& time_series_map)
-      : _X2(nullptr), _L1(nullptr), _L2(nullptr), _has_data_at_t(D, false) {
+  Imple(int const& D, int const& D_X, TimeSeriesMap const& time_series_map)
+      : _has_data_at_t(D, false) {
     prepareSystem(D, D_X, time_series_map);
   }
 
@@ -32,12 +32,10 @@ class GaussianInterpolation::Imple {
     _L2 = nullptr;
   }
 
-  bool solveMean(const int& D, const int& D_X,
-                 const TimeSeriesMap& time_series_map, MatNxN* Mu) {
+  bool solveMean(int const& D, int const& D_X,
+                 TimeSeriesMap const& time_series_map, MatNxN* Mu) {
     SparseQR sparse_qr(*_L1);
-
     MatNxN mean(_L1->cols(), D_X);
-
     for (int i = 0; i < D_X; ++i)
       mean.col(i) = sparse_qr.solve(-1.0f * (*_L2) * _X2->col(i));
     Mu->resize(D, mean.cols());
@@ -51,7 +49,7 @@ class GaussianInterpolation::Imple {
     return true;
   }
 
-  bool solveVariance(const int& D, const float& lambda, MatNxN* Sigma) {
+  bool solveVariance(int const& D, float const& lambda, MatNxN* Sigma) {
     SpMat L1TL1 = _L1->transpose() * (*_L1) * std::pow(1.0f / lambda, 2);
     SpMat I(L1TL1.rows(), L1TL1.cols());
     I.setIdentity();
@@ -73,11 +71,10 @@ class GaussianInterpolation::Imple {
   }
 
  private:
-  void prepareSystem(const int& D, const int& D_X,
-                     const TimeSeriesMap& time_series_map) {
-    const size_t N = time_series_map.size();
-
-    for (const auto& it : time_series_map) _has_data_at_t[it.first] = true;
+  void prepareSystem(int const& D, int const& D_X,
+                     TimeSeriesMap const& time_series_map) {
+    size_t N = time_series_map.size();
+    for (auto const& it : time_series_map) _has_data_at_t[it.first] = true;
 
     SpMat L;
     MakeFiniteDifferenceMat(D, &L);
@@ -93,7 +90,7 @@ class GaussianInterpolation::Imple {
 
     // second, find domain with data samples
     int i = 0;
-    for (const auto& it : time_series_map) {
+    for (auto const& it : time_series_map) {
       pm_vec[j++] = it.first;
       _X2->row(i++) = it.second.transpose();
     }
@@ -121,14 +118,14 @@ class GaussianInterpolation::Imple {
  * @param time_series_data : vector of pair<int, VecN> data
  */
 GaussianInterpolation::GaussianInterpolation(
-    const int& D, const TimeSeriesMap& time_series_data)
+    int const& D, TimeSeriesMap const& time_series_data)
     : Interpolation(D, time_series_data),
       _p(new GaussianInterpolation::Imple(D, dataDimension(),
                                           time_series_data)) {}
 
 GaussianInterpolation::~GaussianInterpolation() {}
 
-bool GaussianInterpolation::solve(const float& lambda, MatNxN* Mu,
+bool GaussianInterpolation::solve(float const& lambda, MatNxN* Mu,
                                   MatNxN* Sigma) {
   bool res =
       _p->solveMean(timeDimension(), dataDimension(), timeSeriesMap(), Mu);
