@@ -1,6 +1,9 @@
 // Copyright (C) 2015 BK
 
 #include "MLInterpolation/interpolation.h"
+
+#include "iostream"
+
 #include "MLCore/exceptions.h"
 
 namespace ML {
@@ -20,18 +23,21 @@ class Interpolation::Imple {
 
  private:
   void checkInputValidity() {
-    BadInputException bad_input_ex(
-        "GaussianInterpolation | Bad input exception");
+    BadInputException ex_or("GaussianInterpolation | Out of range");
+    BadInputException ex_bix("GaussianInterpolation | Bad input exception");
 
-    if (_D < 2) throw bad_input_ex;
+    if (_D < 2) throw ex_bix;
 
     _D_X = static_cast<int>(_time_series_map.begin()->second.size());
-
+    std::cout << "D_X:" << _D_X << std::endl;
+    std::cout << "D_:" << _D << std::endl;
+    int i = 0;
     for (const auto& it : _time_series_map) {
       // each sample should in between total dimension 'D'
-      if (it.first < 0 || it.first > _D - 1) throw bad_input_ex;
+      if (it.first < 0 || it.first > _D - 1) throw ex_or;
       // each sample data dimension should be all the same.
-      if (_D_X != static_cast<int>(it.second.size())) throw bad_input_ex;
+      if (_D_X != static_cast<int>(it.second.size())) throw ex_bix;
+      std::cout << i++ << std::endl;
     }
   }
 };
