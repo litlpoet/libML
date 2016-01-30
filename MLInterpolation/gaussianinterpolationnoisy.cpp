@@ -45,7 +45,7 @@ class GaussianInterpolationNoisy::Imple {
     MatNxN LTL_inv = LTL.llt().solve(MatNxN::Identity(D, D));
 
     SpMat AT = _A->transpose();
-    MatNxN Sigma_y = MatNxN::Identity(_N, _N);
+    MatNxN Sigma_y = 5.0f * MatNxN::Identity(_N, _N);
     MatNxN Sigma_y_inv = Sigma_y.inverse();
     MatNxN Sigma_rh = LTL + AT * Sigma_y_inv * (*_A);
     (*Sigma) = Sigma_rh.llt().solve(MatNxN::Identity(D, D));

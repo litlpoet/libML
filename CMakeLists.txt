@@ -11,7 +11,7 @@ include(gmock)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
     "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  set(warnings "-Wall -Wextra -Werror")
+  set(warnings "-Wall -Wextra")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
   set(warnings "/W4 /EHsc")
 endif()
@@ -30,7 +30,7 @@ endif()
 if (WIN32)
   set(EIGEN3_DIR "c:/Local/include/eigen3")
 else()
-  set(EIGEN3_DIR "/usr/local/include/eigen3")
+  set(EIGEN3_DIR "/usr/include/eigen3")
 endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${EIGEN3_DIR})
