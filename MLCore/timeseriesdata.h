@@ -5,6 +5,7 @@
 
 #include <map>
 #include <utility>
+#include <vector>
 
 #include "MLCore/mathtypes.h"
 
@@ -12,6 +13,7 @@ namespace ML {
 
 using T_Sample = std::pair<int, VecN>;
 using TimeSeriesMap = std::map<int, VecN>;
+using TimeSeriesDense = std::vector<VecN>;
 
 T_Sample MakeTimeSample(int const& f, int n_d, ...);
 

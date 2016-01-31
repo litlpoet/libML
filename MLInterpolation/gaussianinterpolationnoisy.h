@@ -12,9 +12,12 @@ class GaussianInterpolationNoisy : public Interpolation {
   GaussianInterpolationNoisy(int const& D,
                              TimeSeriesMap const& time_series_data);
 
+  GaussianInterpolationNoisy(TimeSeriesDense const& time_series_dense);
+
   ~GaussianInterpolationNoisy();
 
-  bool solve(float const& lambda, MatNxN* Mu, MatNxN* Sigma = nullptr) final;
+  bool solve(float const& lambda, float const& alpha, MatNxN* Mu,
+             MatNxN* Sigma = nullptr) final;
 
   void setBoundaryConstraint(int const& b_type);
 

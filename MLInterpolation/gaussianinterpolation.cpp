@@ -17,10 +17,11 @@ class GaussianInterpolation::Imple {
   SpMat* _L1{nullptr};   // prior for unknowns
   SpMat* _L2{nullptr};   // prior for knowns
   std::vector<bool> _has_data_at_t;
+  TimeSeriesMap _time_series_map;
 
   Imple(int const& D, int const& D_X, TimeSeriesMap const& time_series_map)
-      : _has_data_at_t(D, false) {
-    prepareSystem(D, D_X, time_series_map);
+      : _has_data_at_t(D, false), _time_series_map(time_series_map) {
+    prepareSystem(D, D_X);
   }
 
   ~Imple() {
@@ -32,8 +33,7 @@ class GaussianInterpolation::Imple {
     _L2 = nullptr;
   }
 
-  bool solveMean(int const& D, int const& D_X,
-                 TimeSeriesMap const& time_series_map, MatNxN* Mu) {
+  bool solveMean(int const& D, int const& D_X, MatNxN* Mu) {
     SparseQR sparse_qr(*_L1);
     MatNxN mean(_L1->cols(), D_X);
     for (int i = 0; i < D_X; ++i)
@@ -42,7 +42,7 @@ class GaussianInterpolation::Imple {
 
     for (int i = 0, j = 0; i < D; ++i)
       if (_has_data_at_t[i])
-        Mu->row(i) = time_series_map.at(i).transpose();
+        Mu->row(i) = _time_series_map.at(i).transpose();
       else
         Mu->row(i) = mean.row(j++);
 
@@ -71,10 +71,9 @@ class GaussianInterpolation::Imple {
   }
 
  private:
-  void prepareSystem(int const& D, int const& D_X,
-                     TimeSeriesMap const& time_series_map) {
-    size_t N = time_series_map.size();
-    for (auto const& it : time_series_map) _has_data_at_t[it.first] = true;
+  void prepareSystem(int const& D, int const& D_X) {
+    size_t N = _time_series_map.size();
+    for (auto const& it : _time_series_map) _has_data_at_t[it.first] = true;
 
     SpMat L;
     MakeFiniteDifferenceMat(D, &L);
@@ -90,7 +89,7 @@ class GaussianInterpolation::Imple {
 
     // second, find domain with data samples
     int i = 0;
-    for (auto const& it : time_series_map) {
+    for (auto const& it : _time_series_map) {
       pm_vec[j++] = it.first;
       _X2->row(i++) = it.second.transpose();
     }
@@ -115,20 +114,20 @@ class GaussianInterpolation::Imple {
  * @param T : the time of interpolation region. interpolation will be done
  * on [0, T] region
  * @param lambda : precision
- * @param time_series_data : vector of pair<int, VecN> data
+ * @param time_series_map : vector of pair<int, VecN> data
  */
 GaussianInterpolation::GaussianInterpolation(
-    int const& D, TimeSeriesMap const& time_series_data)
-    : Interpolation(D, time_series_data),
+    int const& D, TimeSeriesMap const& time_series_map)
+    : Interpolation(D, time_series_map),
       _p(new GaussianInterpolation::Imple(D, dataDimension(),
-                                          time_series_data)) {}
+                                          time_series_map)) {}
 
 GaussianInterpolation::~GaussianInterpolation() {}
 
-bool GaussianInterpolation::solve(float const& lambda, MatNxN* Mu,
-                                  MatNxN* Sigma) {
-  bool res =
-      _p->solveMean(timeDimension(), dataDimension(), timeSeriesMap(), Mu);
+bool GaussianInterpolation::solve(float const& lambda, float const& alpha,
+                                  MatNxN* Mu, MatNxN* Sigma) {
+  (void)alpha;
+  bool res = _p->solveMean(timeDimension(), dataDimension(), Mu);
   if (Sigma) res |= _p->solveVariance(timeDimension(), lambda, Sigma);
   return res;
 }

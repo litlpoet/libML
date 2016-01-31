@@ -13,7 +13,8 @@ class GaussianInterpolation : public Interpolation {
 
   ~GaussianInterpolation();
 
-  bool solve(float const& lambda, MatNxN* Mu, MatNxN* Sigma = nullptr) final;
+  bool solve(float const& lambda, float const& alpha, MatNxN* Mu,
+             MatNxN* Sigma = nullptr) final;
 
  private:
   class Imple;

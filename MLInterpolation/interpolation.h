@@ -12,17 +12,18 @@ class Interpolation {
  public:
   Interpolation(int const& D, TimeSeriesMap const& time_series_map);
 
+  Interpolation(TimeSeriesDense const& time_series_dense);
+
   virtual ~Interpolation();
 
-  virtual bool solve(float const& lambda, MatNxN* Mu, MatNxN* Sigma = nullptr);
+  virtual bool solve(float const& lambda, float const& alpha, MatNxN* Mu,
+                     MatNxN* Sigma = nullptr);
 
   virtual bool solve(int const& initial_n_knots, int const& level, MatNxN* R);
 
   int const& timeDimension() const;
 
   int const& dataDimension() const;
-
-  TimeSeriesMap const& timeSeriesMap() const;
 
  protected:
   class Imple;

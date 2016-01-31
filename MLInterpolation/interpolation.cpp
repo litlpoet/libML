@@ -10,29 +10,28 @@ namespace ML {
 
 class Interpolation::Imple {
  public:
-  int _D;    // discrete time dimension
-  int _D_X;  // sample dimension
-  TimeSeriesMap _time_series_map;
+  int _D{0};    // discrete time dimension
+  int _D_X{0};  // sample dimension
 
-  Imple(const int& D, const TimeSeriesMap& time_series_map)
-      : _D(D), _D_X(0), _time_series_map(time_series_map) {
-    checkInputValidity();
+  Imple(int const& D, TimeSeriesMap const& time_series_map) : _D(D) {
+    checkInputValidity(time_series_map);
+  }
+
+  Imple(TimeSeriesDense const& time_series_dense)
+      : _D(time_series_dense.size()) {
+    if (_D > 0) _D_X = time_series_dense.front().size();
   }
 
   ~Imple() {}
 
  private:
-  void checkInputValidity() {
+  void checkInputValidity(TimeSeriesMap const& time_series_map) {
     BadInputException ex_or("GaussianInterpolation | Out of range");
     BadInputException ex_bix("GaussianInterpolation | Bad input exception");
-
     if (_D < 2) throw ex_bix;
-
-    _D_X = static_cast<int>(_time_series_map.begin()->second.size());
-    std::cout << "D_X:" << _D_X << std::endl;
-    std::cout << "D_:" << _D << std::endl;
+    _D_X = static_cast<int>(time_series_map.begin()->second.size());
     int i = 0;
-    for (const auto& it : _time_series_map) {
+    for (auto const& it : time_series_map) {
       // each sample should in between total dimension 'D'
       if (it.first < 0 || it.first > _D - 1) throw ex_or;
       // each sample data dimension should be all the same.
@@ -42,21 +41,22 @@ class Interpolation::Imple {
   }
 };
 
-Interpolation::Interpolation(const int& D, const TimeSeriesMap& time_series_map)
-    : _p(new Interpolation::Imple(D, time_series_map)) {}
+Interpolation::Interpolation(int const& D, TimeSeriesMap const& time_series_map)
+    : _p(new Imple(D, time_series_map)) {}
+
+Interpolation::Interpolation(TimeSeriesDense const& time_series_dense)
+    : _p(new Imple(time_series_dense)) {}
 
 Interpolation::~Interpolation() {}
 
-bool Interpolation::solve(const float&, MatNxN*, MatNxN*) { return false; }
-
-bool Interpolation::solve(const int&, const int&, MatNxN*) { return false; }
-
-const int& Interpolation::timeDimension() const { return _p->_D; }
-
-const int& Interpolation::dataDimension() const { return _p->_D_X; }
-
-const TimeSeriesMap& Interpolation::timeSeriesMap() const {
-  return _p->_time_series_map;
+bool Interpolation::solve(float const&, float const&, MatNxN*, MatNxN*) {
+  return false;
 }
+
+bool Interpolation::solve(int const&, int const&, MatNxN*) { return false; }
+
+int const& Interpolation::timeDimension() const { return _p->_D; }
+
+int const& Interpolation::dataDimension() const { return _p->_D_X; }
 
 }  // namespace ML
