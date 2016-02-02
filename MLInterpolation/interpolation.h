@@ -4,6 +4,7 @@
 #define MLINTERPOLATION_INTERPOLATION_H_
 
 #include <memory>
+
 #include "MLCore/timeseriesdata.h"
 
 namespace ML {
