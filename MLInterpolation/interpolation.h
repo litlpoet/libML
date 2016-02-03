@@ -12,7 +12,7 @@ class Interpolation {
  public:
   Interpolation(int const& D, TimeSeriesMap const& time_series_map);
 
-  Interpolation(TimeSeriesDense const& time_series_dense);
+  explicit Interpolation(TimeSeriesDense const& time_series_dense);
 
   virtual ~Interpolation();
 
@@ -27,7 +27,7 @@ class Interpolation {
 
  protected:
   class Imple;
-  std::unique_ptr<Imple> _p;
+  std::unique_ptr<Imple> _p{nullptr};
 };
 
 }  // namespace ML

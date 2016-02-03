@@ -12,7 +12,7 @@ class GaussianInterpolationNoisy : public Interpolation {
   GaussianInterpolationNoisy(int const& D,
                              TimeSeriesMap const& time_series_data);
 
-  GaussianInterpolationNoisy(TimeSeriesDense const& time_series_dense);
+  explicit GaussianInterpolationNoisy(TimeSeriesDense const& time_series_dense);
 
   ~GaussianInterpolationNoisy();
 
@@ -23,7 +23,7 @@ class GaussianInterpolationNoisy : public Interpolation {
 
  private:
   class Imple;
-  std::unique_ptr<Imple> _p;
+  std::unique_ptr<Imple> _p{nullptr};
 };
 
 }  // namespace ML

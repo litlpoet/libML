@@ -17,7 +17,7 @@ class Interpolation::Imple {
     checkInputValidity(time_series_map);
   }
 
-  Imple(TimeSeriesDense const& time_series_dense)
+  explicit Imple(TimeSeriesDense const& time_series_dense)
       : _D(time_series_dense.size()) {
     if (_D > 0) _D_X = time_series_dense.front().size();
   }
