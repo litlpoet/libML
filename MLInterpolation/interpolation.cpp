@@ -20,6 +20,7 @@ class Interpolation::Imple {
   explicit Imple(TimeSeriesDense const& time_series_dense)
       : _D(time_series_dense.size()) {
     if (_D > 0) _D_X = time_series_dense.front().size();
+    std::cout << "inside interp:" << _D << " by " << _D_X << std::endl;
   }
 
   ~Imple() {}
@@ -45,7 +46,9 @@ Interpolation::Interpolation(int const& D, TimeSeriesMap const& time_series_map)
     : _p(new Imple(D, time_series_map)) {}
 
 Interpolation::Interpolation(TimeSeriesDense const& time_series_dense)
-    : _p(new Imple(time_series_dense)) {}
+    : _p(new Imple(time_series_dense)) {
+  std::cout << "dense interp" << std::endl;
+}
 
 Interpolation::~Interpolation() {}
 

@@ -42,27 +42,22 @@ class GaussianInterpolationNoisy::Imple {
 
   bool solveSigmaAndMu(int const& D, int const& D_X, float const& lambda,
                        float const& alpha, MatNxN* Mu, MatNxN* Sigma) {
-    std::cout << "time dim: " << D << std::endl;
-    std::cout << "data dim: " << D_X << std::endl;
     preparePrior(D);
     multiplyLambdaToPrior(lambda);
 
     // MatNxN LTL = MatNxN::Constant(_D, _D, 1e-3);
     MatNxN LTL = SpMat(_L_p.transpose() * _L_p);
     MatNxN LTL_inv = LTL.llt().solve(MatNxN::Identity(D, D));
-    std::cout << "LTL_inv computed" << std::endl;
 
     SpMat AT = _A->transpose();
     MatNxN Sigma_y = alpha * MatNxN::Identity(_N, _N);
     MatNxN Sigma_y_inv = Sigma_y.inverse();
     MatNxN Sigma_rh = LTL + AT * Sigma_y_inv * (*_A);
     (*Sigma) = Sigma_rh.llt().solve(MatNxN::Identity(D, D));
-    std::cout << "SIGMA computed" << std::endl;
 
     MatNxN LGS = (*Sigma) * AT * Sigma_y_inv;
     Mu->resize(D, D_X);
     for (int i = 0; i < D_X; ++i) Mu->col(i) = LGS * _Y->col(i);
-    std::cout << "Mean computed" << std::endl;
     return true;
   }
 
@@ -88,7 +83,8 @@ class GaussianInterpolationNoisy::Imple {
     std::vector<Trp> triples;
     for (auto const& it : time_series_dense) {
       _Y->row(i) = it.transpose();
-      triples.push_back(Trp(i, i++, 1));
+      triples.push_back(Trp(i, i, 1));
+      i++;
     }
     _A = new SpMat(_N, D);
     _A->setFromTriplets(triples.begin(), triples.end());
@@ -126,11 +122,7 @@ GaussianInterpolationNoisy::GaussianInterpolationNoisy(
 GaussianInterpolationNoisy::GaussianInterpolationNoisy(
     TimeSeriesDense const& time_series_dense)
     : Interpolation(time_series_dense),
-      _p(new Imple(timeDimension(), dataDimension(), time_series_dense)) {
-  std::cout << "dense gpn" << std::endl;
-  std::cout << "time dim:" << timeDimension() << std::endl;
-  std::cout << "data dim:" << dataDimension() << std::endl;
-}
+      _p(new Imple(timeDimension(), dataDimension(), time_series_dense)) {}
 
 GaussianInterpolationNoisy::~GaussianInterpolationNoisy() {}
 
