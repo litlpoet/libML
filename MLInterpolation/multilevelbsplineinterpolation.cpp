@@ -144,8 +144,7 @@ class MultiLevelBSplineInterpolation::Imple {
 MultiLevelBSplineInterpolation::MultiLevelBSplineInterpolation(
     int const &D, TimeSeriesMap const &time_series_map)
     : Interpolation(D, time_series_map),
-      _p(new MultiLevelBSplineInterpolation::Imple(D, dataDimension(),
-                                                   time_series_map)) {}
+      _p(new Imple(D, dataDimension(), time_series_map)) {}
 
 MultiLevelBSplineInterpolation::~MultiLevelBSplineInterpolation() {}
 

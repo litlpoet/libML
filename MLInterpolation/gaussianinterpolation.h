@@ -11,7 +11,7 @@ class GaussianInterpolation : public Interpolation {
  public:
   GaussianInterpolation(int const& D, TimeSeriesMap const& time_series_data);
 
-  ~GaussianInterpolation();
+  ~GaussianInterpolation() final;
 
   bool solve(float const& lambda, float const& alpha, MatNxN* Mu,
              MatNxN* Sigma = nullptr) final;

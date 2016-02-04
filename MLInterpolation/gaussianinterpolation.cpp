@@ -119,8 +119,7 @@ class GaussianInterpolation::Imple {
 GaussianInterpolation::GaussianInterpolation(
     int const& D, TimeSeriesMap const& time_series_map)
     : Interpolation(D, time_series_map),
-      _p(new GaussianInterpolation::Imple(D, dataDimension(),
-                                          time_series_map)) {}
+      _p(new Imple(D, dataDimension(), time_series_map)) {}
 
 GaussianInterpolation::~GaussianInterpolation() {}
 

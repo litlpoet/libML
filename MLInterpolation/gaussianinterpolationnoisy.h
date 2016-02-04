@@ -23,7 +23,7 @@ class GaussianInterpolationNoisy : public Interpolation {
 
  private:
   class Imple;
-  std::unique_ptr<Imple> _p{nullptr};
+  std::unique_ptr<Imple> _p;
 };
 
 }  // namespace ML
