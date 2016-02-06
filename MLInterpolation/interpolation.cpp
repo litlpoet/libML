@@ -31,13 +31,11 @@ class Interpolation::Imple {
     BadInputException ex_bix("GaussianInterpolation | Bad input exception");
     if (_D < 2) throw ex_bix;
     _D_X = static_cast<int>(time_series_map.begin()->second.size());
-    int i = 0;
     for (auto const& it : time_series_map) {
       // each sample should in between total dimension 'D'
       if (it.first < 0 || it.first > _D - 1) throw ex_or;
       // each sample data dimension should be all the same.
       if (_D_X != static_cast<int>(it.second.size())) throw ex_bix;
-      std::cout << i++ << std::endl;
     }
   }
 };
