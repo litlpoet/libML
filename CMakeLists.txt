@@ -3,7 +3,7 @@ project("MachineLearningLibrary")
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 ## ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules :
-##     everytime s:/VersionControl/Research/libML/cmake/modules
+##     everytime ~/VersionControl/Modules/libML/cmake/modules
 
 enable_testing()
 
@@ -37,6 +37,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${EIGEN3_DIR})
 
 add_subdirectory(MLCore)
 add_subdirectory(MLInterpolation)
+add_subdirectory(MLRegression)
 
 add_executable(LibMLMain src/main.cpp)
 target_link_libraries(LibMLMain MLCore MLInterpolation)
