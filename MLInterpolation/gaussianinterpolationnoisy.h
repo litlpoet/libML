@@ -10,7 +10,7 @@ namespace ML {
 class GaussianInterpolationNoisy : public Interpolation {
  public:
   GaussianInterpolationNoisy(int const& D,
-                             TimeSeriesMap const& time_series_data);
+                             TimeSeriesMap const& time_series_map);
 
   explicit GaussianInterpolationNoisy(TimeSeriesDense const& time_series_dense);
 

@@ -26,8 +26,8 @@ class Interpolation::Imple {
 
  private:
   void checkInputValidity(TimeSeriesMap const& time_series_map) {
-    BadInputException ex_or("GaussianInterpolation | Out of range");
-    BadInputException ex_bix("GaussianInterpolation | Bad input exception");
+    BadInputException ex_or("Interpolation | Out of range");
+    BadInputException ex_bix("Interpolation | Bad input exception");
     if (_D < 2) throw ex_bix;
     _D_X = static_cast<int>(time_series_map.begin()->second.size());
     for (auto const& it : time_series_map) {

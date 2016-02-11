@@ -9,9 +9,11 @@ namespace ML {
 
 class GPRegression : public Regression {
  public:
-  GPRegression();
+  GPRegression(int const& n_dim_D, TimeSeriesMap const& time_series_map);
 
   ~GPRegression() final;
+
+  bool solve(MatNxN* Mu, MatNxN* Sigma = nullptr) final;
 
  private:
   class Imple;

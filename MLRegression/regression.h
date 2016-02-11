@@ -5,13 +5,23 @@
 
 #include <memory>
 
+#include "MLCore/timeseriesdata.h"
+
 namespace ML {
 
 class Regression {
  public:
-  Regression();
+  Regression(int const& n_dim_D, TimeSeriesMap const& time_series_map);
 
   virtual ~Regression();
+
+  virtual bool solve(MatNxN* Mu, MatNxN* Sigma = nullptr) = 0;
+
+  int const& timeDimension() const;
+
+  int const& xDimension() const;
+
+  int const& yDimension() const;
 
  private:
   class Imple;

@@ -15,20 +15,22 @@ class GaussianInterpolationNoisy::Imple {
  public:
   BoundaryType _boundary{BoundaryType::None};  // boundary condition type
   bool _prior_dirty{true};  // dirty bit for prior computation
-  size_t _N{0};             // number of observed samples
+  size_t _n_X{0};           // number of observed samples
   MatNxN* _Y{nullptr};      // given sample values
   SpMat* _A{nullptr};       // linear gaussian system matrix
   SpMat* _L{nullptr};       // temporal smoothness prior matrix
   SpMat _L_p;               // prior mat multiplied by lambda
 
-  Imple(int const& D, int const& D_X, TimeSeriesMap const& time_series_map)
-      : _N(time_series_map.size()) {
-    prepareSystem(D, D_X, time_series_map);
+  Imple(int const& n_dim_D, int const& n_dim_X,
+        TimeSeriesMap const& time_series_map)
+      : _n_X(time_series_map.size()) {
+    prepareSystem(n_dim_D, n_dim_X, time_series_map);
   }
 
-  Imple(int const& D, int const& D_X, TimeSeriesDense const& time_series_dense)
-      : _N(D) {
-    prepareSystem(D, D_X, time_series_dense);
+  Imple(int const& n_dim_D, int const& n_dim_X,
+        TimeSeriesDense const& time_series_dense)
+      : _n_X(n_dim_D) {
+    prepareSystem(n_dim_D, n_dim_X, time_series_dense);
   }
 
   ~Imple() {
@@ -40,65 +42,66 @@ class GaussianInterpolationNoisy::Imple {
     _L = nullptr;
   }
 
-  bool solveSigmaAndMu(int const& D, int const& D_X, float const& lambda,
-                       float const& alpha, MatNxN* Mu, MatNxN* Sig_x_y) {
-    preparePrior(D);
+  bool solveSigmaAndMu(int const& n_dim_D, int const& n_dim_X,
+                       float const& lambda, float const& alpha, MatNxN* Mu,
+                       MatNxN* Sig_x_y) {
+    preparePrior(n_dim_D);
     multiplyLambdaToPrior(lambda);
 
     // MatNxN Sig_x = MatNxN::Constant(_D, _D, 1e-3);
     MatNxN Sig_x_inv = SpMat(_L_p.transpose() * _L_p);
-    MatNxN Sig_x = Sig_x_inv.llt().solve(MatNxN::Identity(D, D));
+    // MatNxN Sig_x = Sig_x_inv.llt().solve(MatNxN::Identity(n_dim_D, n_dim_D));
 
     SpMat AT = _A->transpose();
-    MatNxN Sig_y = alpha * MatNxN::Identity(_N, _N);
+    MatNxN Sig_y = alpha * MatNxN::Identity(_n_X, _n_X);
     MatNxN Sig_y_inv = Sig_y.inverse();
     MatNxN Sig_x_y_inv = Sig_x_inv + AT * Sig_y_inv * (*_A);
-    (*Sig_x_y) = Sig_x_y_inv.llt().solve(MatNxN::Identity(D, D));
+    (*Sig_x_y) = Sig_x_y_inv.llt().solve(MatNxN::Identity(n_dim_D, n_dim_D));
     MatNxN LGS = (*Sig_x_y) * AT * Sig_y_inv;
-    Mu->resize(D, D_X);
-    for (int i = 0; i < D_X; ++i) Mu->col(i) = LGS * _Y->col(i);
+    Mu->resize(n_dim_D, n_dim_X);
+    for (int i = 0; i < n_dim_X; ++i) Mu->col(i) = LGS * _Y->col(i);
     return true;
   }
 
  private:
-  void prepareSystem(int const& D, int const& D_X,
+  void prepareSystem(int const& n_dim_D, int const& n_dim_X,
                      TimeSeriesMap const& time_series_map) {
     int i = 0;
-    _Y = new MatNxN(_N, D_X);
+    _Y = new MatNxN(_n_X, n_dim_X);
     std::vector<Trp> trps;
     for (auto const& it : time_series_map) {
       _Y->row(i) = it.second.transpose();
       trps.push_back(Trp(i, it.first, 1.0f));
       ++i;
     }
-    _A = new SpMat(_N, D);
+    _A = new SpMat(_n_X, n_dim_D);
     _A->setFromTriplets(trps.begin(), trps.end());
     _L = new SpMat;
   }
 
-  void prepareSystem(int const& D, int const& D_X,
+  void prepareSystem(int const& n_dim_D, int const& n_dim_X,
                      TimeSeriesDense const& time_series_dense) {
     int i = 0;
-    _Y = new MatNxN(_N, D_X);
+    _Y = new MatNxN(_n_X, n_dim_X);
     std::vector<Trp> trps;
     for (auto const& it : time_series_dense) {
       _Y->row(i) = it.transpose();
       trps.push_back(Trp(i, i, 1));
       ++i;
     }
-    _A = new SpMat(_N, D);
+    _A = new SpMat(_n_X, n_dim_D);
     _A->setFromTriplets(trps.begin(), trps.end());
     _L = new SpMat;
   }
 
-  void preparePrior(int const& D) {
+  void preparePrior(int const& n_dim_D) {
     if (!_prior_dirty) return;
     if (_boundary == BoundaryType::C1)
-      MakeFiniteDifferenceMatWithBoundary(D, _L);
+      MakeFiniteDifferenceMatWithBoundary(n_dim_D, _L);
     else if (_boundary == BoundaryType::C2)
-      MakeFiniteDifferenceMatWithC2Boundary(D, _L);
+      MakeFiniteDifferenceMatWithC2Boundary(n_dim_D, _L);
     else
-      MakeFiniteDifferenceMat(D, _L);
+      MakeFiniteDifferenceMat(n_dim_D, _L);
     _prior_dirty = false;
   }
 
@@ -115,9 +118,9 @@ class GaussianInterpolationNoisy::Imple {
 };
 
 GaussianInterpolationNoisy::GaussianInterpolationNoisy(
-    int const& D, TimeSeriesMap const& time_series_map)
-    : Interpolation(D, time_series_map),
-      _p(new Imple(D, dataDimension(), time_series_map)) {}
+    int const& n_dim_D, TimeSeriesMap const& time_series_map)
+    : Interpolation(n_dim_D, time_series_map),
+      _p(new Imple(n_dim_D, dataDimension(), time_series_map)) {}
 
 GaussianInterpolationNoisy::GaussianInterpolationNoisy(
     TimeSeriesDense const& time_series_dense)
