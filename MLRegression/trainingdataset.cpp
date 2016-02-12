@@ -40,7 +40,6 @@ void TrainingDataSet::append(VecN const& x, VecN const& y) {
   assert(y.size() == _p->_n_dim_Y);
   _p->_X.push_back(x);
   for (int d = 0; d < _p->_n_dim_Y; ++d) _p->_Y[d].push_back(y(d));
-  assert(_p->_X.size() == _p->_Y.size());
   _p->_n_data = _p->_X.size();
 }
 

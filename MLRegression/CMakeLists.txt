@@ -1,7 +1,10 @@
 add_library(
   MLRegression
-  regression.cpp
   gaussianprocess.cpp
+  kernelfunction.cpp
+  kernelsquaredexponential.cpp
+  regression.cpp
+  trainingdataset.cpp
   )
 
 target_link_libraries(

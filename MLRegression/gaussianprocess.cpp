@@ -4,6 +4,7 @@
 
 #include <Eigen/Dense>
 #include <vector>
+#include <iostream>
 
 #include "MLRegression/kernelfunction.h"
 #include "MLRegression/kernelsquaredexponential.h"
@@ -31,12 +32,14 @@ class GPRegression::Imple {
 
   ~Imple() {
     if (_Kf) delete _Kf;
+    if (_data_set) delete _data_set;
   }
 
   void addTrainingData(VecN const& x, VecN const& y) {
     int const& n = _data_set->size();
+    std::cout << "current data size: " << n << std::endl;
     _data_set->append(x, y);
-
+    std::cout << "data append done x: " << x << " y: " << y << std::endl;
     if (n == 0) {
       _L(0, 0) = sqrt(_Kf->cov(_data_set->x(0), _data_set->x(0)));
       _Kf->setParametersDirty(false);
@@ -115,10 +118,13 @@ class GPRegression::Imple {
     _data_set = new TrainingDataSet(_n_dim_Y);
     _L.resize(_n_dim_D, _n_dim_D);
     VecN x(1);
+    std::cout << "append training data" << std::endl;
     for (auto const& it : time_series_map) {
       x << it.first;
+      std::cout << "x " << x << " y " << it.second.transpose() << std::endl;
       addTrainingData(x, it.second);
     }
+    std::cout << "append training data done" << std::endl;
   }
 };
 
