@@ -17,6 +17,8 @@ using TimeSeriesDense = std::vector<VecN>;
 
 T_Sample MakeTimeSample(int const& f, int n_d, ...);
 
+T_Sample MakeTimeSample(int const& f, VecN const& vec);
+
 }  // namespace ML
 
 #endif  // MLCORE_TIMESERIESDATA_H_

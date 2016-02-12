@@ -21,6 +21,8 @@ class KernelFunction {
 
   virtual float cov(VecN const& x1, VecN const& x2) = 0;
 
+  virtual void grad(VecN const& x1, VecN const& x2, VecN* grad) = 0;
+
   bool const& isParametersDirty() const;
 
   int const& xDimension() const;

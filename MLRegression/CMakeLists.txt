@@ -5,6 +5,7 @@ add_library(
   kernelsquaredexponential.cpp
   regression.cpp
   trainingdataset.cpp
+  gpoptimizerrprop.cpp
   )
 
 target_link_libraries(

@@ -15,4 +15,8 @@ T_Sample MakeTimeSample(int const& f, int n_d, ...) {
   return T_Sample(f, sample);
 }
 
+T_Sample MakeTimeSample(int const& f, VecN const& vec) {
+  return T_Sample(f, vec);
+}
+
 }  // namespace ML

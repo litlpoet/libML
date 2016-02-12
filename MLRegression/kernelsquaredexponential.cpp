@@ -6,7 +6,7 @@ namespace ML {
 
 class KernelSquaredExponential::Imple {
  public:
-  Scalar _ell{1.0f};
+  Scalar _ell{4.0f};
   Scalar _sf2{1.0f};
 
   Imple() {}
@@ -35,6 +35,13 @@ void KernelSquaredExponential::initLogParameters(VecN const& param) {
 Scalar KernelSquaredExponential::cov(VecN const& x1, VecN const& x2) {
   Scalar z = ((x1 - x2) / _p->_ell).squaredNorm();
   return _p->_sf2 * exp(-0.5f * z);
+}
+
+void KernelSquaredExponential::grad(VecN const& x1, VecN const& x2,
+                                    VecN* grad) {
+  Scalar z = ((x1 - x2) / _p->_ell).squaredNorm();
+  Scalar k = _p->_sf2 * exp(-0.5 * z);
+  *grad << k * z, 2 * k;
 }
 
 }  // namespace ML

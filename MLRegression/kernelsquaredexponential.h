@@ -19,6 +19,8 @@ class KernelSquaredExponential : public KernelFunction {
 
   Scalar cov(VecN const& x1, VecN const& x2) override;
 
+  void grad(VecN const& x1, VecN const& x2, VecN* grad) override;
+
  private:
   class Imple;
   std::unique_ptr<Imple> _p;

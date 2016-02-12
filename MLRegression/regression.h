@@ -11,11 +11,15 @@ namespace ML {
 
 class Regression {
  public:
+  explicit Regression(int const& n_dim_D);
+
   Regression(int const& n_dim_D, TimeSeriesMap const& time_series_map);
 
   virtual ~Regression();
 
   virtual bool solve(MatNxN* Mu, MatNxN* Sigma = nullptr) = 0;
+
+  void setDimensions(TimeSeriesMap const& time_series_map);
 
   int const& timeDimension() const;
 
