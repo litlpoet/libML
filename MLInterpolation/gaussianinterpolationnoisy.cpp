@@ -27,10 +27,10 @@ class GaussianInterpolationNoisy::Imple {
     prepareSystem(n_dim_D, n_dim_X, time_series_map);
   }
 
-  Imple(int const& n_dim_D, int const& n_dim_X,
+  Imple(int const& n_dim_D, int const& n_dim_X, int const& sampling_rate,
         TimeSeriesDense const& time_series_dense)
-      : _n_X(n_dim_D) {
-    prepareSystem(n_dim_D, n_dim_X, time_series_dense);
+      : _n_X(n_dim_D / sampling_rate) {
+    prepareSystem(n_dim_D, n_dim_X, sampling_rate, time_series_dense);
   }
 
   ~Imple() {
@@ -67,6 +67,7 @@ class GaussianInterpolationNoisy::Imple {
   void prepareSystem(int const& n_dim_D, int const& n_dim_X,
                      TimeSeriesMap const& time_series_map) {
     int i = 0;
+    _A = new SpMat(_n_X, n_dim_D);
     _Y = new MatNxN(_n_X, n_dim_X);
     std::vector<Trp> trps;
     for (auto const& it : time_series_map) {
@@ -74,22 +75,20 @@ class GaussianInterpolationNoisy::Imple {
       trps.push_back(Trp(i, it.first, 1.0f));
       ++i;
     }
-    _A = new SpMat(_n_X, n_dim_D);
     _A->setFromTriplets(trps.begin(), trps.end());
     _L = new SpMat;
   }
 
   void prepareSystem(int const& n_dim_D, int const& n_dim_X,
+                     int const& sampling_rate,
                      TimeSeriesDense const& time_series_dense) {
-    int i = 0;
+    _A = new SpMat(_n_X, n_dim_D);
     _Y = new MatNxN(_n_X, n_dim_X);
     std::vector<Trp> trps;
-    for (auto const& it : time_series_dense) {
-      _Y->row(i) = it.transpose();
-      trps.push_back(Trp(i, i, 1));
-      ++i;
+    for (int f = 0, i = 0; f < n_dim_D; f += sampling_rate, ++i) {
+      _Y->row(i) = time_series_dense.at(f).transpose();
+      trps.push_back(Trp(i, f, 1));
     }
-    _A = new SpMat(_n_X, n_dim_D);
     _A->setFromTriplets(trps.begin(), trps.end());
     _L = new SpMat;
   }
@@ -123,9 +122,10 @@ GaussianInterpolationNoisy::GaussianInterpolationNoisy(
       _p(new Imple(n_dim_D, dataDimension(), time_series_map)) {}
 
 GaussianInterpolationNoisy::GaussianInterpolationNoisy(
-    TimeSeriesDense const& time_series_dense)
+    TimeSeriesDense const& time_series_dense, int const& sampling_rate)
     : Interpolation(time_series_dense),
-      _p(new Imple(timeDimension(), dataDimension(), time_series_dense)) {}
+      _p(new Imple(timeDimension(), dataDimension(), sampling_rate,
+                   time_series_dense)) {}
 
 GaussianInterpolationNoisy::~GaussianInterpolationNoisy() {}
 
