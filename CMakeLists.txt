@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8.0 FATAL_ERROR)
 project("MachineLearningLibrary")
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
@@ -33,17 +33,11 @@ else()
   set(EIGEN3_DIR "/usr/include/eigen3")
 endif()
 
+message("eigen3 dir: " ${EIGEN3_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${EIGEN3_DIR})
 
-add_subdirectory(MLCore)
-add_subdirectory(MLInterpolation)
-add_subdirectory(MLRegression)
-
-add_executable(LibMLMain src/main.cpp)
-target_link_libraries(LibMLMain MLCore MLInterpolation)
-target_compile_features(LibMLMain PRIVATE cxx_range_for)
-
-add_test(LibMLMainTest LibMLMain)
+add_subdirectory(ml)
+add_subdirectory(ml_test)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL

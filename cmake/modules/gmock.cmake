@@ -1,4 +1,4 @@
-set(GTEST_DIR "../../Libraries/cpp/googletest"  # starting from the project root
+set(GTEST_DIR "~/cyop/thirdparties/googletest"  # starting from the project root
   CACHE PATH
   "The path to the Google mock test framework")
 
