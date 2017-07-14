@@ -10,8 +10,9 @@
 namespace ML
 {
 
-using Trp                = Eigen::Triplet<Scalar, int>;
+using Trp                = Eigen::Triplet<Scalar, size_t>;
 using SpMat              = Eigen::SparseMatrix<Scalar>;
+using SpMatId            = SpMat::Index;
 using SimplicalCholSpMat = Eigen::SimplicialCholesky<SpMat>;
 using SparseQR           = Eigen::SparseQR<SpMat, Eigen::NaturalOrdering<int>>;
 

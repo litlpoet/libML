@@ -4,14 +4,16 @@
 
 // Test Gaussian Interpolation (without noise assumption)
 
-TEST_F(TestMLGaussianInterp, DimensionTest) {
+TEST_F(TestMLGaussianInterp, DimensionTest)
+{
   ML::MatNxN mean;
   _g_interp->solve(1.0f, 1.0f, &mean);
   EXPECT_EQ(_frames, mean.rows());
   EXPECT_EQ(3, mean.cols());
 }
 
-TEST_F(TestMLGaussianInterp, SampleValueTest) {
+TEST_F(TestMLGaussianInterp, SampleValueTest)
+{
   ML::MatNxN mean;
   _g_interp->solve(1.0f, 1.0f, &mean);
   EXPECT_TRUE(mean.row(0).transpose() == _t_data.at(0));
@@ -21,7 +23,8 @@ TEST_F(TestMLGaussianInterp, SampleValueTest) {
 
 // Test Gaussian Interpolation (with noise assumption)
 
-TEST_F(TestMLGaussianInterpNoisy, DimensionTest) {
+TEST_F(TestMLGaussianInterpNoisy, DimensionTest)
+{
   ML::MatNxN mean;
   ML::MatNxN var;
   _g_interp_noisy->solve(1.f, 1.0f, &mean, &var);
@@ -31,7 +34,8 @@ TEST_F(TestMLGaussianInterpNoisy, DimensionTest) {
   EXPECT_EQ(_frames, var.cols());
 }
 
-TEST_F(TestMLGaussianInterpNoisy, PrecisionTest) {
+TEST_F(TestMLGaussianInterpNoisy, PrecisionTest)
+{
   ML::MatNxN mean;
   ML::MatNxN var;
   _g_interp_noisy->solve(30.f, 1.0f, &mean, &var);
@@ -45,14 +49,16 @@ TEST_F(TestMLGaussianInterpNoisy, PrecisionTest) {
 
 // Test Multi-level B-Spline Interpolation
 
-TEST_F(TestMLMultiLevelBSplineInterp, DimensionTest) {
+TEST_F(TestMLMultiLevelBSplineInterp, DimensionTest)
+{
   ML::MatNxN res;
   _mbsp_interp->solve(6, 2, &res);
   EXPECT_EQ(_frames, res.rows());
   EXPECT_EQ(3, res.cols());
 }
 
-TEST_F(TestMLMultiLevelBSplineInterp, PrecisionTest) {
+TEST_F(TestMLMultiLevelBSplineInterp, PrecisionTest)
+{
   ML::MatNxN res;
   _mbsp_interp->solve(6, 2, &res);
   std::cout << "Multi level interp with level " << 2 << ":" << std::endl;

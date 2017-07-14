@@ -16,17 +16,17 @@ class TrainingDataSet::Imple
   std::vector<VecN>                _X;
   std::vector<std::vector<Scalar>> _Y;
 
-  explicit Imple(int const& n_dim_Y) : _n_dim_Y(n_dim_Y)
+  explicit Imple(int const& n_dim_Y)
+      : _n_dim_Y(n_dim_Y)
   {
     _Y.resize(n_dim_Y);
   }
 
-  ~Imple()
-  {
-  }
+  ~Imple() = default;
 };
 
-TrainingDataSet::TrainingDataSet(int const& n_dim_Y) : _p(new Imple(n_dim_Y))
+TrainingDataSet::TrainingDataSet(int const& n_dim_Y)
+    : _p(new Imple(n_dim_Y))
 {
 }
 

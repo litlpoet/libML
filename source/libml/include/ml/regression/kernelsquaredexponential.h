@@ -5,25 +5,31 @@
 
 #include <ml/regression/kernelfunction.h>
 
-namespace ML {
+namespace ML
+{
 
-class KernelSquaredExponential : public KernelFunction {
+class KernelSquaredExponential : public KernelFunction
+{
  public:
   KernelSquaredExponential();
 
   ~KernelSquaredExponential() override;
 
-  bool init(int const& n_dim_X) override;
+  bool
+  init(int const& n_dim_X) override;
 
-  void initLogParameters(VecN const& log_params) override;
+  void
+  initLogParameters(VecN const& log_params) override;
 
-  Scalar cov(VecN const& x1, VecN const& x2) override;
+  Scalar
+  cov(VecN const& x1, VecN const& x2) override;
 
-  void grad(VecN const& x1, VecN const& x2, VecN* grad) override;
+  void
+  grad(VecN const& x1, VecN const& x2, VecN* grad) override;
 
  private:
   class Imple;
-  std::unique_ptr<Imple> _p;
+  unique_ptr<Imple> _p;
 };
 
 }  // namespace ML

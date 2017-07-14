@@ -7,9 +7,13 @@
 
 #include <ml/core/timeseriesdata.h>
 
-namespace ML {
+using std::unique_ptr;
 
-class Regression {
+namespace ML
+{
+
+class Regression
+{
  public:
   explicit Regression(int const& n_dim_D);
 
@@ -17,19 +21,24 @@ class Regression {
 
   virtual ~Regression();
 
-  virtual bool solve(MatNxN* Mu, MatNxN* Sigma = nullptr) = 0;
+  virtual bool
+  solve(MatNxN* Mu, MatNxN* Sigma = nullptr) = 0;
 
-  void setDimensions(TimeSeriesMap const& time_series_map);
+  void
+  setDimensions(TimeSeriesMap const& time_series_map);
 
-  int const& timeDimension() const;
+  int const&
+  timeDimension() const;
 
-  int const& xDimension() const;
+  int const&
+  xDimension() const;
 
-  int const& yDimension() const;
+  int const&
+  yDimension() const;
 
  private:
   class Imple;
-  std::unique_ptr<Imple> _p;
+  unique_ptr<Imple> _p;
 };
 
 }  // namespace ML

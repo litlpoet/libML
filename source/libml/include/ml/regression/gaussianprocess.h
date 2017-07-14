@@ -5,11 +5,13 @@
 
 #include <ml/regression/regression.h>
 
-namespace ML {
+namespace ML
+{
 
 class KernelFunction;
 
-class GPRegression : public Regression {
+class GPRegression : public Regression
+{
  public:
   explicit GPRegression(int const& n_dim_D);
 
@@ -17,23 +19,30 @@ class GPRegression : public Regression {
 
   ~GPRegression() final;
 
-  void setInitialTrainingData(TimeSeriesMap const& time_series_map);
+  void
+  setInitialTrainingData(TimeSeriesMap const& time_series_map);
 
-  void addTrainingData(VecN const& x, VecN const& y);
+  void
+  addTrainingData(VecN const& x, VecN const& y);
 
-  void clearTrainingData();
+  void
+  clearTrainingData();
 
-  bool solve(MatNxN* Mu, MatNxN* Sigma = nullptr) final;
+  bool
+  solve(MatNxN* Mu, MatNxN* Sigma = nullptr) final;
 
-  KernelFunction* kernelFunction(int const& d_Y);
+  KernelFunction*
+  kernelFunction(int const& d_Y);
 
-  Scalar logLikelihood(int const& d_Y);
+  Scalar
+  logLikelihood(int const& d_Y);
 
-  VecN logLikelihoodGrad(int const& d_Y);
+  VecN
+  logLikelihoodGrad(int const& d_Y);
 
  private:
   class Imple;
-  std::unique_ptr<Imple> _p;
+  unique_ptr<Imple> _p;
 };
 
 }  // namespace ML

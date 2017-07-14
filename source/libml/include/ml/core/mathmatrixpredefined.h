@@ -3,19 +3,23 @@
 #ifndef MLCORE_MATHMATRIXPREDEFINED_H_
 #define MLCORE_MATHMATRIXPREDEFINED_H_
 
+#include <memory>
+
 #include <ml/core/mathsparsetypes.h>
+
+using std::unique_ptr;
 
 namespace ML
 {
 
-bool
-MakeFiniteDifferenceMat(int const& dim, SpMat* L);
+unique_ptr<SpMat>
+MakeFiniteDifferenceMat(size_t const& dim);
 
-bool
-MakeFiniteDifferenceMatWithBoundary(int const& dim, SpMat* L);
+unique_ptr<SpMat>
+MakeFiniteDifferenceMatWithBoundary(size_t const& dim);
 
-bool
-MakeFiniteDifferenceMatWithC2Boundary(int const& dim, SpMat* L);
+unique_ptr<SpMat>
+MakeFiniteDifferenceMatWithC2Boundary(size_t const& dim);
 
 }  // namespace ML
 

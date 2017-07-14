@@ -8,6 +8,8 @@
 
 #include <ml/core/mathtypes.h>
 
+using std::unique_ptr;
+
 namespace ML
 {
 
@@ -18,25 +20,33 @@ class TrainingDataSet
 
   virtual ~TrainingDataSet();
 
-  bool isEmpty() const;
+  bool
+  isEmpty() const;
 
-  int const& size() const;
+  int const&
+  size() const;
 
-  VecN const& x(int const& i) const;
+  VecN const&
+  x(int const& i) const;
 
-  Scalar const& y(int const& d, int const& i) const;
+  Scalar const&
+  y(int const& d, int const& i) const;
 
-  std::vector<Scalar> const& Y(int const& d) const;
+  std::vector<Scalar> const&
+  Y(int const& d) const;
 
-  void append(VecN const& x, VecN const& y);
+  void
+  append(VecN const& x, VecN const& y);
 
-  void setY(int const& d, int const& i, Scalar const& y);
+  void
+  setY(int const& d, int const& i, Scalar const& y);
 
-  void clear();
+  void
+  clear();
 
  private:
   class Imple;
-  std::unique_ptr<Imple> _p;
+  unique_ptr<Imple> _p;
 };
 
 }  // namespace ML

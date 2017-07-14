@@ -14,6 +14,9 @@ add_library(
   src/regression/regression.cpp
   src/regression/trainingdataset.cpp
   src/regression/gpoptimizerrprop.cpp
+  src/interpolation/gaussianinterpolation_imple.h
+  src/interpolation/gaussianinterpolationnoisy_imple.h
+  src/interpolation/multilevelbsplineinterpolation_imple.h
   )
 
 target_include_directories(

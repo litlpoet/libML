@@ -3,7 +3,7 @@
 #ifndef MLCORE_MATHTYPES_H_
 #define MLCORE_MATHTYPES_H_
 
-#define USE_DOUBLE 0
+#define USE_DOUBLE 1
 
 #include <Eigen/Core>
 

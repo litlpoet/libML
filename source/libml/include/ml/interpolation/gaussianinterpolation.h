@@ -11,15 +11,16 @@ namespace ML
 class GaussianInterpolation : public Interpolation
 {
  public:
-  GaussianInterpolation(int const& D, TimeSeriesMap const& time_series_data);
+  GaussianInterpolation(size_t const& D, TimeSeriesMap const& time_series_data);
 
   ~GaussianInterpolation() final;
 
-  bool solve(float const& lambda, float const& alpha, MatNxN* Mu, MatNxN* Sigma = nullptr) final;
+  bool
+  solve(Scalar const& lambda, Scalar const& alpha, MatNxN* Mu, MatNxN* Sigma = nullptr) final;
 
  private:
   class Imple;
-  std::unique_ptr<Imple> _p;
+  unique_ptr<Imple> _p;
 };
 
 }  // namespace ML

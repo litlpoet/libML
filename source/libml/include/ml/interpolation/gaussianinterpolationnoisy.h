@@ -11,20 +11,22 @@ namespace ML
 class GaussianInterpolationNoisy : public Interpolation
 {
  public:
-  GaussianInterpolationNoisy(int const& D, TimeSeriesMap const& time_series_map);
+  GaussianInterpolationNoisy(size_t const& D, TimeSeriesMap const& time_series_map);
 
   explicit GaussianInterpolationNoisy(TimeSeriesDense const& time_series_dense,
-                                      int const&             sampling_rate = 1);
+                                      size_t const&          sampling_rate = 1);
 
   ~GaussianInterpolationNoisy();
 
-  bool solve(float const& lambda, float const& alpha, MatNxN* Mu, MatNxN* Sigma = nullptr) final;
+  bool
+  solve(Scalar const& lambda, Scalar const& alpha, MatNxN* Mu, MatNxN* Sigma = nullptr) final;
 
-  void setBoundaryConstraint(int const& b_type);
+  void
+  setBoundaryConstraint(short const& b_type);
 
  private:
   class Imple;
-  std::unique_ptr<Imple> _p;
+  unique_ptr<Imple> _p;
 };
 
 }  // namespace ML

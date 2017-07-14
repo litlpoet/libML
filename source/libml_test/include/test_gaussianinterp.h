@@ -9,9 +9,12 @@
 #include <ml/interpolation/gaussianinterpolationnoisy.h>
 #include <ml/interpolation/multilevelbsplineinterpolation.h>
 
-class TestMLGaussianInterp : public ::testing::Test {
+class TestMLGaussianInterp : public ::testing::Test
+{
  protected:
-  void SetUp() {
+  void
+  SetUp()
+  {
     _frames = 10;
 
     _t_data.insert(ML::MakeTimeSample(0, 3, 0.0f, 0.0f, 0.0f));
@@ -21,16 +24,23 @@ class TestMLGaussianInterp : public ::testing::Test {
     _g_interp = new ML::GaussianInterpolation(_frames, _t_data);
   }
 
-  void TearDown() { delete _g_interp; }
+  void
+  TearDown()
+  {
+    delete _g_interp;
+  }
 
-  int _frames;
-  ML::TimeSeriesMap _t_data;
+  int                        _frames;
+  ML::TimeSeriesMap          _t_data;
   ML::GaussianInterpolation* _g_interp;
 };
 
-class TestMLGaussianInterpNoisy : public ::testing::Test {
+class TestMLGaussianInterpNoisy : public ::testing::Test
+{
  protected:
-  void SetUp() {
+  void
+  SetUp()
+  {
     _frames = 10;
 
     _t_data.insert(ML::MakeTimeSample(0, 3, 0.0f, 0.0f, 0.0f));
@@ -42,16 +52,23 @@ class TestMLGaussianInterpNoisy : public ::testing::Test {
     _g_interp_noisy = new ML::GaussianInterpolationNoisy(_frames, _t_data);
   }
 
-  void TearDown() { delete _g_interp_noisy; }
+  void
+  TearDown()
+  {
+    delete _g_interp_noisy;
+  }
 
-  int _frames;
-  ML::TimeSeriesMap _t_data;
+  int                             _frames;
+  ML::TimeSeriesMap               _t_data;
   ML::GaussianInterpolationNoisy* _g_interp_noisy;
 };
 
-class TestMLMultiLevelBSplineInterp : public ::testing::Test {
+class TestMLMultiLevelBSplineInterp : public ::testing::Test
+{
  protected:
-  void SetUp() {
+  void
+  SetUp()
+  {
     _frames = 10;
 
     _t_data.insert(ML::MakeTimeSample(0, 3, 0.0f, 0.0f, 0.0f));
@@ -61,10 +78,14 @@ class TestMLMultiLevelBSplineInterp : public ::testing::Test {
     _mbsp_interp = new ML::MultiLevelBSplineInterpolation(_frames, _t_data);
   }
 
-  void TearDown() { delete _mbsp_interp; }
+  void
+  TearDown()
+  {
+    delete _mbsp_interp;
+  }
 
-  int _frames;
-  ML::TimeSeriesMap _t_data;
+  int                                 _frames;
+  ML::TimeSeriesMap                   _t_data;
   ML::MultiLevelBSplineInterpolation* _mbsp_interp;
 };
 
